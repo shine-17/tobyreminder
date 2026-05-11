@@ -1,0 +1,13 @@
+package cozy.ai.reminder;
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+
+@SpringBootApplication
+public class TobyreminderApplication {
+
+	public static void main(String[] args) {
+		SpringApplication.run(TobyreminderApplication.class, args);
+	}
+
+}
