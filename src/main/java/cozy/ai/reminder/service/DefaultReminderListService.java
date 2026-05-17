@@ -64,6 +64,7 @@ public class DefaultReminderListService implements ReminderListService {
     @Transactional
     public void delete(Long id) {
         ReminderList list = findById(id);
+        reminderRepository.deleteByListId(id);
         reminderListRepository.delete(list);
     }
 

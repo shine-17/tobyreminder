@@ -1,7 +1,10 @@
 "use client";
 
+import { useState } from "react";
 import { ReminderList, Reminder } from "@/types";
 import ReminderRow from "./ReminderRow";
+import ReminderDetail from "./ReminderDetail";
+import AddReminder from "./AddReminder";
 import { toggleComplete } from "@/lib/api";
 
 interface ReminderListViewProps {
@@ -15,6 +18,8 @@ export default function ReminderListView({
   reminders,
   onRefresh,
 }: ReminderListViewProps) {
+  const [editingId, setEditingId] = useState<number | null>(null);
+
   const handleToggleComplete = async (id: number) => {
     try {
       await toggleComplete(id);
@@ -36,7 +41,7 @@ export default function ReminderListView({
 
       {/* Reminders */}
       <div className="flex flex-col">
-        {reminders.length === 0 ? (
+        {reminders.length === 0 && editingId === null ? (
           <div
             className="text-center py-12 text-sm"
             style={{ color: "var(--text-tertiary)" }}
@@ -44,15 +49,36 @@ export default function ReminderListView({
             No Reminders
           </div>
         ) : (
-          reminders.map((reminder) => (
-            <ReminderRow
-              key={reminder.id}
-              reminder={reminder}
-              listColor={list.color}
-              onToggleComplete={handleToggleComplete}
-            />
-          ))
+          reminders.map((reminder) =>
+            editingId === reminder.id ? (
+              <ReminderDetail
+                key={reminder.id}
+                reminder={reminder}
+                listColor={list.color}
+                onToggleComplete={handleToggleComplete}
+                onSaved={onRefresh}
+                onClose={() => setEditingId(null)}
+              />
+            ) : (
+              <ReminderRow
+                key={reminder.id}
+                reminder={reminder}
+                listColor={list.color}
+                onToggleComplete={handleToggleComplete}
+                onClick={() => setEditingId(reminder.id)}
+              />
+            )
+          )
         )}
+      </div>
+
+      {/* Add Reminder */}
+      <div className="mt-2 border-t" style={{ borderColor: "var(--bg-reminder-active)" }}>
+        <AddReminder
+          listId={list.id}
+          listColor={list.color}
+          onAdded={onRefresh}
+        />
       </div>
     </div>
   );

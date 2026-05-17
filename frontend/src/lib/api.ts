@@ -21,6 +21,33 @@ export function getListById(id: number): Promise<ReminderList> {
   return fetchJson(`${BASE}/lists/${id}`);
 }
 
+export function createList(data: {
+  name: string;
+  color: string;
+  icon?: string | null;
+}): Promise<ReminderList> {
+  return fetchJson(`${BASE}/lists`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(data),
+  });
+}
+
+export function updateList(
+  id: number,
+  data: { name?: string; color?: string; icon?: string | null }
+): Promise<ReminderList> {
+  return fetchJson(`${BASE}/lists/${id}`, {
+    method: "PATCH",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(data),
+  });
+}
+
+export function deleteList(id: number): Promise<void> {
+  return fetchJson(`${BASE}/lists/${id}`, { method: "DELETE" });
+}
+
 // --- Reminders ---
 
 export function getReminders(

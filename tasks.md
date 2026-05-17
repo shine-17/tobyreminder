@@ -85,37 +85,37 @@
 ## Phase 3 — 리마인더 CRUD 연동 + 리스트 관리
 
 ### 3-1. Backend — 리스트 CRUD API
-- [ ] `POST /api/lists` — 리스트 생성
-- [ ] `PATCH /api/lists/{id}` — 리스트 수정 (이름, 색상, 아이콘)
-- [ ] `DELETE /api/lists/{id}` — 리스트 삭제 (cascade)
+- [x] `POST /api/lists` — 리스트 생성
+- [x] `PATCH /api/lists/{id}` — 리스트 수정 (이름, 색상, 아이콘)
+- [x] `DELETE /api/lists/{id}` — 리스트 삭제 (cascade)
 
 ### 3-2. 리마인더 추가
-- [ ] `components/AddReminder.tsx` — 하단 "+ Add Reminder" 인라인 입력
-- [ ] Enter로 생성, 포커스 유지하여 연속 입력
+- [x] `components/AddReminder.tsx` — 하단 "+ Add Reminder" 인라인 입력
+- [x] Enter로 생성, 포커스 유지하여 연속 입력
 
 ### 3-3. 리마인더 완료
-- [ ] 체크박스 클릭 → `PATCH /api/reminders/{id}/complete`
-- [ ] 완료 애니메이션 (원 채우기 0.3s → line-through → 0.5s fade-out)
+- [x] 체크박스 클릭 → `PATCH /api/reminders/{id}/complete`
+- [x] 완료 애니메이션 (원 채우기 0.3s → line-through → 0.5s fade-out)
 
 ### 3-4. 리마인더 인라인 편집
-- [ ] `components/ReminderDetail.tsx` — 행 클릭 시 확장
-- [ ] 제목/메모 borderless 인라인 편집
-- [ ] 외부 클릭 시 자동 저장 (`PATCH /api/reminders/{id}`)
+- [x] `components/ReminderDetail.tsx` — 행 클릭 시 확장
+- [x] 제목/메모 borderless 인라인 편집
+- [x] 외부 클릭 시 자동 저장 (`PATCH /api/reminders/{id}`)
 
 ### 3-5. 리마인더 삭제
-- [ ] 편집 모드에서 삭제 버튼
-- [ ] `DELETE /api/reminders/{id}` 호출 후 목록 갱신
+- [x] 편집 모드에서 삭제 버튼
+- [x] `DELETE /api/reminders/{id}` 호출 후 목록 갱신
 
 ### 3-6. 리스트 관리
-- [ ] `components/ListModal.tsx` — 생성/편집 모달 (이름, 12색 팔레트, 아이콘 그리드)
-- [ ] 사이드바 "+ Add List" 버튼
-- [ ] 리스트 우클릭 → 편집/삭제 컨텍스트 메뉴
+- [x] `components/ListModal.tsx` — 생성/편집 모달 (이름, 12색 팔레트, 아이콘 그리드)
+- [x] 사이드바 "+ Add List" 버튼
+- [x] 리스트 우클릭 → 편집/삭제 컨텍스트 메뉴
 
 ### 3-7. 검증
-- [ ] 리마인더 생성 → 목록에 즉시 표시
-- [ ] 완료 → 애니메이션 후 사라짐
-- [ ] 인라인 편집 → 외부 클릭 시 저장
-- [ ] 리스트 생성/편집/삭제 동작
+- [x] 리마인더 생성 → 목록에 즉시 표시
+- [x] 완료 → 애니메이션 후 사라짐
+- [x] 인라인 편집 → 외부 클릭 시 저장
+- [x] 리스트 생성/편집/삭제 동작
 
 ---
 
