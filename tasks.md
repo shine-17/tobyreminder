@@ -3,47 +3,47 @@
 ## Phase 1 — Backend 기초 + 단일 리스트 CRUD
 
 ### 1-1. 프로젝트 설정
-- [ ] `application.properties` → `application.yml` 전환
-- [ ] H2 in-memory 설정 (`jdbc:h2:mem:reminderdb`, 콘솔 활성화)
-- [ ] JPA 설정 (`ddl-auto: create-drop`, `show-sql: true`, `format_sql: true`)
-- [ ] CORS 설정 (`WebMvcConfigurer` — localhost:3000 허용)
+- [x] `application.properties` → `application.yml` 전환
+- [x] H2 in-memory 설정 (`jdbc:h2:mem:reminderdb`, 콘솔 활성화)
+- [x] JPA 설정 (`ddl-auto: create-drop`, `show-sql: true`, `format_sql: true`)
+- [x] CORS 설정 (`WebMvcConfigurer` — localhost:3000 허용)
 
 ### 1-2. 엔티티
-- [ ] `ReminderList` 엔티티 (id, name, color, icon, displayOrder, isDefault, createdAt, updatedAt)
-- [ ] `Reminder` 엔티티 (id, title, memo, completed, completedAt, displayOrder, list ManyToOne, createdAt, updatedAt)
+- [x] `ReminderList` 엔티티 (id, name, color, icon, displayOrder, isDefault, createdAt, updatedAt)
+- [x] `Reminder` 엔티티 (id, title, memo, completed, completedAt, displayOrder, list ManyToOne, createdAt, updatedAt)
 
 ### 1-3. Repository
-- [ ] `ReminderListRepository` (JpaRepository)
-- [ ] `ReminderRepository` (JpaRepository)
-  - [ ] `findByListIdAndCompletedFalseOrderByDisplayOrder()`
-  - [ ] `findByListIdAndCompletedTrueOrderByCompletedAtDesc()`
-  - [ ] `countByListIdAndCompletedFalse()`
+- [x] `ReminderListRepository` (JpaRepository)
+- [x] `ReminderRepository` (JpaRepository)
+  - [x] `findByListIdAndCompletedFalseOrderByDisplayOrder()`
+  - [x] `findByListIdAndCompletedTrueOrderByCompletedAtDesc()`
+  - [x] `countByListIdAndCompletedFalse()`
 
 ### 1-4. DTO
-- [ ] `ReminderRequest` (title, memo, listId)
-- [ ] `ReminderResponse` (id, title, memo, completed, completedAt, displayOrder)
-- [ ] `ReminderListResponse` (id, name, color, icon, reminderCount)
+- [x] `ReminderRequest` (title, memo, listId)
+- [x] `ReminderResponse` (id, title, memo, completed, completedAt, displayOrder)
+- [x] `ReminderListResponse` (id, name, color, icon, reminderCount)
 
 ### 1-5. Service
-- [ ] `ReminderListService` — getAll (with count), getById
-- [ ] `ReminderService` — create, getById, getByListId, update, toggleComplete, delete
+- [x] `ReminderListService` — getAll (with count), getById
+- [x] `ReminderService` — create, getById, getByListId, update, toggleComplete, delete
 
 ### 1-6. Controller
-- [ ] `GET /api/lists` — 전체 리스트 (count 포함)
-- [ ] `GET /api/lists/{id}` — 리스트 단건
-- [ ] `GET /api/reminders?listId={id}` — 리스트별 리마인더 조회
-- [ ] `POST /api/reminders` — 생성
-- [ ] `PATCH /api/reminders/{id}` — 수정
-- [ ] `PATCH /api/reminders/{id}/complete` — 완료 토글
-- [ ] `DELETE /api/reminders/{id}` — 삭제
+- [x] `GET /api/lists` — 전체 리스트 (count 포함)
+- [x] `GET /api/lists/{id}` — 리스트 단건
+- [x] `GET /api/reminders?listId={id}` — 리스트별 리마인더 조회
+- [x] `POST /api/reminders` — 생성
+- [x] `PATCH /api/reminders/{id}` — 수정
+- [x] `PATCH /api/reminders/{id}/complete` — 완료 토글
+- [x] `DELETE /api/reminders/{id}` — 삭제
 
 ### 1-7. 초기 데이터
-- [ ] `data.sql` — 기본 리스트 1개 + 샘플 리마인더 5개
+- [x] `data.sql` — 기본 리스트 1개 + 샘플 리마인더 5개
 
 ### 1-8. 검증
-- [ ] `./gradlew bootRun` 성공
-- [ ] H2 콘솔에서 테이블/데이터 확인
-- [ ] 전 API curl 테스트 통과
+- [x] `./gradlew bootRun` 성공
+- [x] H2 콘솔에서 테이블/데이터 확인
+- [x] 전 API curl 테스트 통과
 
 ---
 

@@ -1,7 +1,7 @@
 openapi: 3.1.0
 info:
   title: Toby Reminder API
-  description: Apple Reminders 웹 클론 — ReminderList API
+  description: Apple Reminders 웹 클론 — REST API
   version: 0.1.0
 
 servers:
@@ -93,6 +93,124 @@ paths:
         "404":
           $ref: "#/components/responses/NotFound"
 
+  /api/reminders:
+    get:
+      operationId: getRemindersByListId
+      summary: 리스트별 리마인더 조회
+      description: 지정한 리스트의 리마인더를 displayOrder 순으로 반환한다. 기본적으로 미완료 항목만 반환하며, includeCompleted=true이면 완료 항목도 포함한다.
+      tags: [Reminders]
+      parameters:
+        - name: listId
+          in: query
+          required: true
+          schema:
+            type: integer
+            format: int64
+          description: 리스트 ID
+        - name: includeCompleted
+          in: query
+          required: false
+          schema:
+            type: boolean
+            default: false
+          description: 완료 항목 포함 여부
+      responses:
+        "200":
+          description: 리마인더 배열
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/ReminderResponse"
+
+    post:
+      operationId: createReminder
+      summary: 리마인더 생성
+      description: 새 리마인더를 생성한다. displayOrder는 자동 부여된다.
+      tags: [Reminders]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ReminderRequest"
+      responses:
+        "201":
+          description: 생성된 리마인더
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ReminderResponse"
+
+  /api/reminders/{id}:
+    parameters:
+      - $ref: "#/components/parameters/ReminderId"
+
+    get:
+      operationId: getReminderById
+      summary: 리마인더 단건 조회
+      tags: [Reminders]
+      responses:
+        "200":
+          description: 리마인더
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ReminderResponse"
+        "404":
+          $ref: "#/components/responses/NotFound"
+
+    patch:
+      operationId: updateReminder
+      summary: 리마인더 수정
+      description: 제목, 메모를 수정한다. null 필드는 기존 값을 유지한다.
+      tags: [Reminders]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ReminderRequest"
+      responses:
+        "200":
+          description: 수정된 리마인더
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ReminderResponse"
+        "404":
+          $ref: "#/components/responses/NotFound"
+
+    delete:
+      operationId: deleteReminder
+      summary: 리마인더 삭제
+      tags: [Reminders]
+      responses:
+        "204":
+          description: 삭제 성공
+        "404":
+          $ref: "#/components/responses/NotFound"
+
+  /api/reminders/{id}/complete:
+    parameters:
+      - $ref: "#/components/parameters/ReminderId"
+
+    patch:
+      operationId: toggleReminderComplete
+      summary: 리마인더 완료 토글
+      description: 미완료 → 완료, 완료 → 미완료로 전환한다.
+      tags: [Reminders]
+      responses:
+        "200":
+          description: 토글된 리마인더
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ReminderResponse"
+        "404":
+          $ref: "#/components/responses/NotFound"
+
   /api/lists/reorder:
     patch:
       operationId: reorderLists
@@ -119,6 +237,15 @@ components:
         type: integer
         format: int64
       description: 리스트 ID
+
+    ReminderId:
+      name: id
+      in: path
+      required: true
+      schema:
+        type: integer
+        format: int64
+      description: 리마인더 ID
 
   schemas:
     ReminderListRequest:
@@ -163,6 +290,57 @@ components:
           type: integer
           format: int64
           example: 5
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+
+    ReminderRequest:
+      type: object
+      properties:
+        title:
+          type: string
+          example: Buy milk
+        memo:
+          type: string
+          nullable: true
+          example: From the grocery store
+        listId:
+          type: integer
+          format: int64
+          description: 소속 리스트 ID (생성 시 필수)
+          example: 1
+
+    ReminderResponse:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 1
+        title:
+          type: string
+          example: Buy milk
+        memo:
+          type: string
+          nullable: true
+          example: From the grocery store
+        completed:
+          type: boolean
+          example: false
+        completedAt:
+          type: string
+          format: date-time
+          nullable: true
+        displayOrder:
+          type: integer
+          example: 0
+        listId:
+          type: integer
+          format: int64
+          example: 1
         createdAt:
           type: string
           format: date-time

@@ -3,8 +3,9 @@ package cozy.ai.reminder.service;
 import cozy.ai.reminder.domain.ReminderList;
 import cozy.ai.reminder.dto.ReminderListRequest;
 import cozy.ai.reminder.dto.ReminderListResponse;
-import cozy.ai.reminder.service.ports.in.ReminderListService;
 import cozy.ai.reminder.repository.ReminderListRepository;
+import cozy.ai.reminder.repository.ReminderRepository;
+import cozy.ai.reminder.service.ports.in.ReminderListService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,18 +19,21 @@ import java.util.NoSuchElementException;
 public class DefaultReminderListService implements ReminderListService {
 
     private final ReminderListRepository reminderListRepository;
+    private final ReminderRepository reminderRepository;
 
     @Override
     public List<ReminderListResponse> getAll() {
         return reminderListRepository.findAllByOrderByDisplayOrder().stream()
-                .map(list -> ReminderListResponse.from(list, 0))
+                .map(list -> ReminderListResponse.from(list,
+                        reminderRepository.countByListIdAndCompletedFalse(list.getId())))
                 .toList();
     }
 
     @Override
     public ReminderListResponse getById(Long id) {
         ReminderList list = findById(id);
-        return ReminderListResponse.from(list, 0);
+        long count = reminderRepository.countByListIdAndCompletedFalse(id);
+        return ReminderListResponse.from(list, count);
     }
 
     @Override
