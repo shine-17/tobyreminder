@@ -1,0 +1,52 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  /* 배경 */
+  --bg-sidebar: #f2f1f6;
+  --bg-main: #ffffff;
+  --bg-smart-card: #ffffff;
+  --bg-reminder-hover: #f5f5f7;
+  --bg-reminder-active: #e8e8ed;
+
+  /* 텍스트 */
+  --text-primary: #1d1d1f;
+  --text-secondary: #86868b;
+  --text-tertiary: #aeaeb2;
+
+  /* 스마트 리스트 아이콘 색상 */
+  --smart-today: #007aff;
+  --smart-scheduled: #ff3b30;
+  --smart-all: #5856d6;
+  --smart-flagged: #ff9500;
+  --smart-completed: #8e8e93;
+
+  /* 리스트 프리셋 12색 */
+  --list-red: #ff3b30;
+  --list-orange: #ff9500;
+  --list-yellow: #ffcc00;
+  --list-green: #34c759;
+  --list-teal: #5ac8fa;
+  --list-blue: #007aff;
+  --list-indigo: #5856d6;
+  --list-purple: #af52de;
+  --list-pink: #ff2d55;
+  --list-brown: #a2845e;
+  --list-gray: #8e8e93;
+  --list-darkgray: #636366;
+
+  /* 기능색 */
+  --checkbox-complete: #86868b;
+  --tag-bg: #e8e8ed;
+  --tag-text: #636366;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", system-ui,
+    sans-serif;
+  color: var(--text-primary);
+  background: var(--bg-main);
+  margin: 0;
+  overflow: hidden;
+}

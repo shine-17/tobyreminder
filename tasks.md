@@ -50,35 +50,35 @@
 ## Phase 2 — Frontend 기본 레이아웃 + 조회
 
 ### 2-1. 프로젝트 초기화
-- [ ] `npx create-next-app@latest frontend` (TypeScript, Tailwind, App Router, src-dir)
-- [ ] `next.config.ts` API Proxy 설정 (`/api/:path*` → `localhost:8080`)
+- [x] `npx create-next-app@latest frontend` (TypeScript, Tailwind, App Router, src-dir)
+- [x] `next.config.mjs` API Proxy 설정 (`/api/:path*` → `localhost:8080`)
 
 ### 2-2. 디자인 토큰
-- [ ] `tailwind.config.ts` — spec.md 컬러/타이포/간격 커스텀 테마
-- [ ] `globals.css` — CSS 변수 정의, font-family 설정
+- [x] `tailwind.config.ts` — spec.md 컬러/타이포/간격 커스텀 테마
+- [x] `globals.css` — CSS 변수 정의, font-family 설정
 
 ### 2-3. 타입 + API 클라이언트
-- [ ] `types/index.ts` — ReminderList, Reminder 인터페이스
-- [ ] `lib/api.ts` — getLists(), getReminders(listId) fetch 래퍼
+- [x] `types/index.ts` — ReminderList, Reminder 인터페이스
+- [x] `lib/api.ts` — getLists(), getReminders(listId) fetch 래퍼
 
 ### 2-4. 레이아웃
-- [ ] `app/layout.tsx` — Sidebar + Main 2단 레이아웃
-- [ ] `components/Sidebar.tsx` — 사이드바 컨테이너
-- [ ] `components/SmartListCards.tsx` — 2x2 그리드 카드 (UI만, All만 동작)
-- [ ] `components/SidebarListItem.tsx` — 컬러 원형 아이콘 + 이름 + 카운트
+- [x] `app/layout.tsx` — Sidebar + Main 2단 레이아웃
+- [x] `components/Sidebar.tsx` — 사이드바 컨테이너
+- [x] `components/SmartListCards.tsx` — 2x2 그리드 카드 (UI만, All만 동작)
+- [x] `components/SidebarListItem.tsx` — 컬러 원형 아이콘 + 이름 + 카운트
 
 ### 2-5. 메인 콘텐츠
-- [ ] `components/ReminderListView.tsx` — 리마인더 목록 컨테이너
-- [ ] `components/ReminderRow.tsx` — 체크박스 + 제목 + 메모 미리보기
-- [ ] `components/Checkbox.tsx` — Apple 스타일 원형 체크박스
+- [x] `components/ReminderListView.tsx` — 리마인더 목록 컨테이너
+- [x] `components/ReminderRow.tsx` — 체크박스 + 제목 + 메모 미리보기
+- [x] `components/Checkbox.tsx` — Apple 스타일 원형 체크박스
 
 ### 2-6. 상태 관리 + 연동
-- [ ] 사이드바 리스트 선택 state
-- [ ] 선택된 리스트 → API fetch → 리마인더 목록 표시
+- [x] 사이드바 리스트 선택 state
+- [x] 선택된 리스트 → API fetch → 리마인더 목록 표시
 
 ### 2-7. 검증
-- [ ] Sidebar 리스트 클릭 → Main에 리마인더 표시
-- [ ] Apple Reminders와 시각적 비교 확인
+- [x] Sidebar 리스트 클릭 → Main에 리마인더 표시
+- [x] Apple Reminders와 시각적 비교 확인
 
 ---
 
