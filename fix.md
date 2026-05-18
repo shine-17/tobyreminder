@@ -15,7 +15,7 @@
   - Controller에 `@Valid` 적용
   - `GlobalExceptionHandler`에 `MethodArgumentNotValidException` 핸들러 추가
 
-- [ ] **B-H3. Lazy Loading 안전성 확보**
+- [x] **B-H3. Lazy Loading 안전성 확보**
   - 파일: `domain/Reminder.java:42`, `dto/ReminderResponse.java:28`
   - `ReminderResponse.from()`에서 `getList().getId()` 호출 시 Lazy 로딩 트리거
   - 수정: EAGER fetch 또는 `JOIN FETCH` 쿼리 사용, 혹은 `@Column(name="list_id", insertable=false, updatable=false)` 별도 필드

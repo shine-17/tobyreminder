@@ -43,6 +43,17 @@ public class Reminder {
     @JoinColumn(name = "list_id", nullable = false)
     private ReminderList list;
 
+    @Column(name = "list_id", insertable = false, updatable = false)
+    private Long listId;
+
+    /**
+     * Lazy 프록시 트리거 없이 list_id를 반환한다.
+     * 새로 저장된 엔티티는 읽기전용 필드가 채워지지 않으므로 list에서 fallback.
+     */
+    public Long getListId() {
+        return listId != null ? listId : (list != null ? list.getId() : null);
+    }
+
     @Column(updatable = false)
     private LocalDateTime createdAt;
 

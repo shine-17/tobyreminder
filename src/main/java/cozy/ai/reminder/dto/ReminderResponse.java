@@ -25,7 +25,7 @@ public record ReminderResponse(
                 .completed(reminder.getCompleted())
                 .completedAt(reminder.getCompletedAt())
                 .displayOrder(reminder.getDisplayOrder())
-                .listId(reminder.getList().getId())
+                .listId(reminder.getListId())
                 .createdAt(reminder.getCreatedAt())
                 .updatedAt(reminder.getUpdatedAt())
                 .build();

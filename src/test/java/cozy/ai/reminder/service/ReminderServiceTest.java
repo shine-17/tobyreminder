@@ -96,6 +96,16 @@ class ReminderServiceTest {
         }
 
         @Test
+        @DisplayName("응답에 올바른 listId가 포함된다")
+        void returnsCorrectListId() {
+            ReminderResponse created = reminderService.create(new ReminderRequest("Test", null, defaultList.getId()));
+
+            ReminderResponse result = reminderService.getById(created.id());
+
+            assertThat(result.listId()).isEqualTo(defaultList.getId());
+        }
+
+        @Test
         @DisplayName("존재하지 않는 ID면 예외가 발생한다")
         void throwsWhenNotFound() {
             assertThatThrownBy(() -> reminderService.getById(99L))
