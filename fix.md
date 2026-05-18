@@ -20,7 +20,7 @@
   - `ReminderResponse.from()`에서 `getList().getId()` 호출 시 Lazy 로딩 트리거
   - 수정: EAGER fetch 또는 `JOIN FETCH` 쿼리 사용, 혹은 `@Column(name="list_id", insertable=false, updatable=false)` 별도 필드
 
-- [ ] **B-H4. H2 Console 프로덕션 비활성화**
+- [x] **B-H4. H2 Console 프로덕션 비활성화**
   - 파일: `src/main/resources/application.yml`
   - `h2.console.enabled`를 환경변수로 전환 (`${H2_CONSOLE_ENABLED:false}`)
 
@@ -92,7 +92,7 @@
   - 파일: DTO 또는 서비스 레이어
   - `title`, `memo`, `name` 필드에 HTML 이스케이프 처리
 
-- [ ] **B-M7. show-sql 환경별 분리**
+- [x] **B-M7. show-sql 환경별 분리**
   - 파일: `application.yml`
   - `show-sql: ${JPA_SHOW_SQL:false}`, `format_sql: ${JPA_FORMAT_SQL:false}`
 
