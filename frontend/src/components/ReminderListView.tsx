@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useCallback, useEffect } from "react";
 import { ReminderList, Reminder } from "@/types";
 import ReminderRow from "./ReminderRow";
 import ReminderDetail from "./ReminderDetail";
@@ -19,15 +19,49 @@ export default function ReminderListView({
   onRefresh,
 }: ReminderListViewProps) {
   const [editingId, setEditingId] = useState<number | null>(null);
+  const [focusedIndex, setFocusedIndex] = useState<number>(-1);
 
-  const handleToggleComplete = async (id: number) => {
-    try {
-      await toggleComplete(id);
-      onRefresh();
-    } catch (err) {
-      console.error(err);
-    }
-  };
+  const handleToggleComplete = useCallback(
+    async (id: number) => {
+      try {
+        await toggleComplete(id);
+        onRefresh();
+      } catch (err) {
+        console.error(err);
+      }
+    },
+    [onRefresh]
+  );
+
+  // Keyboard navigation
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (editingId !== null) return; // skip when editing
+
+      if (e.key === "ArrowDown") {
+        e.preventDefault();
+        setFocusedIndex((prev) =>
+          prev < reminders.length - 1 ? prev + 1 : prev
+        );
+      } else if (e.key === "ArrowUp") {
+        e.preventDefault();
+        setFocusedIndex((prev) => (prev > 0 ? prev - 1 : prev));
+      } else if (e.key === "Enter" && focusedIndex >= 0) {
+        e.preventDefault();
+        setEditingId(reminders[focusedIndex].id);
+      } else if (e.key === "Escape") {
+        setFocusedIndex(-1);
+      }
+    };
+
+    document.addEventListener("keydown", handleKeyDown);
+    return () => document.removeEventListener("keydown", handleKeyDown);
+  }, [editingId, focusedIndex, reminders]);
+
+  // Reset focused index when reminders change
+  useEffect(() => {
+    setFocusedIndex(-1);
+  }, [reminders]);
 
   return (
     <div className="max-w-[640px] mx-auto px-4 py-6">
@@ -40,7 +74,7 @@ export default function ReminderListView({
       </h1>
 
       {/* Reminders */}
-      <div className="flex flex-col">
+      <div className="flex flex-col" role="list">
         {reminders.length === 0 && editingId === null ? (
           <div
             className="text-center py-12 text-sm"
@@ -49,31 +83,47 @@ export default function ReminderListView({
             No Reminders
           </div>
         ) : (
-          reminders.map((reminder) =>
+          reminders.map((reminder, index) =>
             editingId === reminder.id ? (
-              <ReminderDetail
-                key={reminder.id}
-                reminder={reminder}
-                listColor={list.color}
-                onToggleComplete={handleToggleComplete}
-                onSaved={onRefresh}
-                onClose={() => setEditingId(null)}
-              />
+              <div key={reminder.id} role="listitem">
+                <ReminderDetail
+                  reminder={reminder}
+                  listColor={list.color}
+                  onToggleComplete={handleToggleComplete}
+                  onSaved={onRefresh}
+                  onClose={() => setEditingId(null)}
+                />
+              </div>
             ) : (
-              <ReminderRow
+              <div
                 key={reminder.id}
-                reminder={reminder}
-                listColor={list.color}
-                onToggleComplete={handleToggleComplete}
-                onClick={() => setEditingId(reminder.id)}
-              />
+                role="listitem"
+                tabIndex={0}
+                style={{
+                  outline:
+                    focusedIndex === index
+                      ? `2px solid ${list.color}`
+                      : "none",
+                  borderRadius: "8px",
+                }}
+              >
+                <ReminderRow
+                  reminder={reminder}
+                  listColor={list.color}
+                  onToggleComplete={handleToggleComplete}
+                  onClick={() => setEditingId(reminder.id)}
+                />
+              </div>
             )
           )
         )}
       </div>
 
       {/* Add Reminder */}
-      <div className="mt-2 border-t" style={{ borderColor: "var(--bg-reminder-active)" }}>
+      <div
+        className="mt-2 border-t"
+        style={{ borderColor: "var(--bg-reminder-active)" }}
+      >
         <AddReminder
           listId={list.id}
           listColor={list.color}

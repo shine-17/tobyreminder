@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState, useCallback, useRef, useMemo } from "react";
 import { ReminderList, Reminder } from "@/types";
 import {
   getLists,
@@ -24,49 +24,66 @@ export default function Home() {
   const [editingList, setEditingList] = useState<ReminderList | null>(null);
 
   // Fetch lists
-  const fetchLists = useCallback(async () => {
+  const fetchLists = useCallback(async (signal?: AbortSignal) => {
     try {
-      const data = await getLists();
+      const data = await getLists(signal);
       setLists(data);
       return data;
     } catch (err) {
+      if (err instanceof DOMException && err.name === "AbortError") return [];
       console.error(err);
       return [];
     }
   }, []);
 
+  // Initial load — intentionally mount-once
+  const initializedRef = useRef(false);
   useEffect(() => {
-    fetchLists().then((data) => {
-      if (data.length > 0 && selectedListId === null) {
-        setSelectedListId(data[0].id);
+    if (initializedRef.current) return;
+    initializedRef.current = true;
+
+    const controller = new AbortController();
+    fetchLists(controller.signal).then((data) => {
+      if (data.length > 0) {
+        setSelectedListId((prev) => prev ?? data[0].id);
       }
       setLoading(false);
     });
-  }, []);
+    return () => controller.abort();
+  }, [fetchLists]);
 
   // Fetch reminders when selected list changes
-  const fetchReminders = useCallback(async () => {
-    if (selectedListId === null) {
-      setReminders([]);
-      return;
-    }
-    try {
-      const data = await getReminders(selectedListId);
-      setReminders(data);
-    } catch (err) {
-      console.error(err);
-    }
-  }, [selectedListId]);
+  const fetchReminders = useCallback(
+    async (signal?: AbortSignal) => {
+      if (selectedListId === null) {
+        setReminders([]);
+        return;
+      }
+      try {
+        const data = await getReminders(selectedListId, false, signal);
+        setReminders(data);
+      } catch (err) {
+        if (err instanceof DOMException && err.name === "AbortError") return;
+        console.error(err);
+      }
+    },
+    [selectedListId]
+  );
 
   useEffect(() => {
-    fetchReminders();
+    const controller = new AbortController();
+    fetchReminders(controller.signal);
+    return () => controller.abort();
   }, [fetchReminders]);
 
-  // Refresh both lists and reminders
+  // Refresh both lists and reminders — use ref to avoid dependency churn
+  const fetchRemindersRef = useRef(fetchReminders);
+  fetchRemindersRef.current = fetchReminders;
+
   const refreshAll = useCallback(async () => {
     await fetchLists();
-    await fetchReminders();
-  }, [fetchLists, fetchReminders]);
+    await fetchRemindersRef.current();
+  }, [fetchLists]);
 
   // List CRUD handlers
   const handleAddList = () => {
@@ -74,23 +91,26 @@ export default function Home() {
     setShowListModal(true);
   };
 
-  const handleEditList = (list: ReminderList) => {
+  const handleEditList = useCallback((list: ReminderList) => {
     setEditingList(list);
     setShowListModal(true);
-  };
+  }, []);
 
-  const handleDeleteList = async (list: ReminderList) => {
-    if (!confirm(`Delete "${list.name}" and all its reminders?`)) return;
-    try {
-      await deleteList(list.id);
-      const updated = await fetchLists();
-      if (selectedListId === list.id) {
-        setSelectedListId(updated.length > 0 ? updated[0].id : null);
+  const handleDeleteList = useCallback(
+    async (list: ReminderList) => {
+      if (!confirm(`Delete "${list.name}" and all its reminders?`)) return;
+      try {
+        await deleteList(list.id);
+        const updated = await fetchLists();
+        if (selectedListId === list.id) {
+          setSelectedListId(updated.length > 0 ? updated[0].id : null);
+        }
+      } catch (err) {
+        console.error(err);
       }
-    } catch (err) {
-      console.error(err);
-    }
-  };
+    },
+    [fetchLists, selectedListId]
+  );
 
   const handleSaveList = async (data: {
     name: string;
@@ -111,7 +131,10 @@ export default function Home() {
     }
   };
 
-  const selectedList = lists.find((l) => l.id === selectedListId) ?? null;
+  const selectedList = useMemo(
+    () => lists.find((l) => l.id === selectedListId) ?? null,
+    [lists, selectedListId]
+  );
 
   if (loading) {
     return (

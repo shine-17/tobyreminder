@@ -2,7 +2,10 @@ import { Reminder, ReminderList } from "@/types";
 
 const BASE = "/api";
 
-async function fetchJson<T>(url: string, init?: RequestInit): Promise<T> {
+async function fetchJson<T>(
+  url: string,
+  init?: RequestInit
+): Promise<T> {
   const res = await fetch(url, init);
   if (!res.ok) {
     throw new Error(`API error: ${res.status} ${res.statusText}`);
@@ -11,14 +14,24 @@ async function fetchJson<T>(url: string, init?: RequestInit): Promise<T> {
   return res.json();
 }
 
-// --- Lists ---
-
-export function getLists(): Promise<ReminderList[]> {
-  return fetchJson(`${BASE}/lists`);
+async function fetchVoid(url: string, init?: RequestInit): Promise<void> {
+  const res = await fetch(url, init);
+  if (!res.ok) {
+    throw new Error(`API error: ${res.status} ${res.statusText}`);
+  }
 }
 
-export function getListById(id: number): Promise<ReminderList> {
-  return fetchJson(`${BASE}/lists/${id}`);
+// --- Lists ---
+
+export function getLists(signal?: AbortSignal): Promise<ReminderList[]> {
+  return fetchJson(`${BASE}/lists`, { signal });
+}
+
+export function getListById(
+  id: number,
+  signal?: AbortSignal
+): Promise<ReminderList> {
+  return fetchJson(`${BASE}/lists/${id}`, { signal });
 }
 
 export function createList(data: {
@@ -45,24 +58,28 @@ export function updateList(
 }
 
 export function deleteList(id: number): Promise<void> {
-  return fetchJson(`${BASE}/lists/${id}`, { method: "DELETE" });
+  return fetchVoid(`${BASE}/lists/${id}`, { method: "DELETE" });
 }
 
 // --- Reminders ---
 
 export function getReminders(
   listId: number,
-  includeCompleted = false
+  includeCompleted = false,
+  signal?: AbortSignal
 ): Promise<Reminder[]> {
   const params = new URLSearchParams({
     listId: String(listId),
     includeCompleted: String(includeCompleted),
   });
-  return fetchJson(`${BASE}/reminders?${params}`);
+  return fetchJson(`${BASE}/reminders?${params}`, { signal });
 }
 
-export function getReminderById(id: number): Promise<Reminder> {
-  return fetchJson(`${BASE}/reminders/${id}`);
+export function getReminderById(
+  id: number,
+  signal?: AbortSignal
+): Promise<Reminder> {
+  return fetchJson(`${BASE}/reminders/${id}`, { signal });
 }
 
 export function createReminder(data: {
@@ -93,5 +110,5 @@ export function toggleComplete(id: number): Promise<Reminder> {
 }
 
 export function deleteReminder(id: number): Promise<void> {
-  return fetchJson(`${BASE}/reminders/${id}`, { method: "DELETE" });
+  return fetchVoid(`${BASE}/reminders/${id}`, { method: "DELETE" });
 }

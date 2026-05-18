@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useCallback } from "react";
 import { Trash2 } from "lucide-react";
 import { Reminder } from "@/types";
 import { updateReminder, deleteReminder } from "@/lib/api";
@@ -23,6 +23,7 @@ export default function ReminderDetail({
 }: ReminderDetailProps) {
   const [title, setTitle] = useState(reminder.title);
   const [memo, setMemo] = useState(reminder.memo ?? "");
+  const [saving, setSaving] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
   const titleRef = useRef<HTMLInputElement>(null);
 
@@ -31,21 +32,8 @@ export default function ReminderDetail({
     titleRef.current?.focus();
   }, []);
 
-  // Click outside to save & close
-  useEffect(() => {
-    const handleClickOutside = (e: MouseEvent) => {
-      if (
-        containerRef.current &&
-        !containerRef.current.contains(e.target as Node)
-      ) {
-        handleSave();
-      }
-    };
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  });
-
-  const handleSave = async () => {
+  const handleSave = useCallback(async () => {
+    if (saving) return;
     const trimmedTitle = title.trim();
     if (!trimmedTitle) {
       onClose();
@@ -56,6 +44,7 @@ export default function ReminderDetail({
     const memoChanged = memo.trim() !== (reminder.memo ?? "");
 
     if (titleChanged || memoChanged) {
+      setSaving(true);
       try {
         await updateReminder(reminder.id, {
           title: trimmedTitle,
@@ -64,10 +53,30 @@ export default function ReminderDetail({
         onSaved();
       } catch (err) {
         console.error(err);
+      } finally {
+        setSaving(false);
       }
     }
     onClose();
-  };
+  }, [title, memo, reminder, saving, onSaved, onClose]);
+
+  // Use ref to always have latest handleSave in the event listener
+  const handleSaveRef = useRef(handleSave);
+  handleSaveRef.current = handleSave;
+
+  // Click outside to save & close
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (
+        containerRef.current &&
+        !containerRef.current.contains(e.target as Node)
+      ) {
+        handleSaveRef.current();
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
 
   const handleDelete = async () => {
     try {
@@ -128,6 +137,7 @@ export default function ReminderDetail({
         onClick={handleDelete}
         className="shrink-0 p-1 rounded hover:bg-red-50 transition-colors"
         title="Delete"
+        aria-label="Delete reminder"
       >
         <Trash2 size={14} style={{ color: "var(--list-red)" }} />
       </button>

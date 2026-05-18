@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, memo } from "react";
 import { Reminder } from "@/types";
 import Checkbox from "./Checkbox";
 
@@ -11,7 +11,7 @@ interface ReminderRowProps {
   onClick: () => void;
 }
 
-export default function ReminderRow({
+function ReminderRowInner({
   reminder,
   listColor,
   onToggleComplete,
@@ -92,3 +92,16 @@ export default function ReminderRow({
     </div>
   );
 }
+
+const ReminderRow = memo(ReminderRowInner, (prev, next) => {
+  return (
+    prev.reminder === next.reminder &&
+    prev.listColor === next.listColor &&
+    prev.onToggleComplete === next.onToggleComplete &&
+    prev.onClick === next.onClick
+  );
+});
+
+ReminderRow.displayName = "ReminderRow";
+
+export default ReminderRow;

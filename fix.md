@@ -26,37 +26,37 @@
 
 ### Frontend
 
-- [ ] **F-H1. useEffect 의존성 배열 수정** — `page.tsx`
+- [x] **F-H1. useEffect 의존성 배열 수정** — `page.tsx`
   - 파일: `app/page.tsx:45`
   - `fetchLists`가 dependency에 누락, 초기화 로직 안정화 필요
   - 수정: 초기화 전용 useEffect와 데이터 페칭 useEffect 분리
 
-- [ ] **F-H2. Stale Closure 수정** — `ReminderDetail.tsx`
+- [x] **F-H2. Stale Closure 수정** — `ReminderDetail.tsx`
   - 파일: `components/ReminderDetail.tsx:35-46`
   - `handleSave`가 이벤트 리스너에 불안정 참조로 바인딩
   - 수정: `useCallback` + ref 패턴으로 최신 함수 참조 보장
 
-- [ ] **F-H3. React.memo 적용** — 리스트 아이템 컴포넌트
+- [x] **F-H3. React.memo 적용** — 리스트 아이템 컴포넌트
   - 파일: `components/ReminderRow.tsx`, `components/ReminderDetail.tsx`
   - `editingId` 변경 시 전체 리스트 리렌더 방지
   - 수정: `React.memo` + 적절한 비교 함수 적용
 
-- [ ] **F-H4. AbortController 추가** — API fetch
+- [x] **F-H4. AbortController 추가** — API fetch
   - 파일: `lib/api.ts`, 각 컴포넌트의 useEffect
   - 컴포넌트 언마운트 시 진행 중인 fetch 취소
   - 수정: `fetchJson`에 signal 파라미터 추가, useEffect cleanup에서 abort
 
-- [ ] **F-H5. Error Boundary 추가**
+- [x] **F-H5. Error Boundary 추가**
   - 신규 파일: `components/ErrorBoundary.tsx` 또는 `app/error.tsx`
   - 자식 컴포넌트 크래시 시 전체 앱 중단 방지
   - 수정: Next.js `error.tsx` 컨벤션 활용
 
-- [ ] **F-H6. 키보드 내비게이션 구현**
+- [x] **F-H6. 키보드 내비게이션 구현**
   - 파일: `components/Sidebar.tsx`, `components/ReminderListView.tsx`
   - 리스트/리마인더 간 화살표 키 이동, Tab 순서 정의
   - 수정: `tabIndex`, `onKeyDown` 핸들러 추가
 
-- [ ] **F-H7. 모달 포커스 트랩**
+- [x] **F-H7. 모달 포커스 트랩**
   - 파일: `components/ListModal.tsx`
   - 모달 열림 시 포커스 가두기, 닫힘 시 원래 요소로 복귀
   - 수정: focus trap 로직 구현 (Tab/Shift+Tab 순환)
@@ -135,7 +135,7 @@
   - Sidebar 280px 고정 → 모바일에서 숨김/드로어 패턴
   - `hidden md:flex`, `w-full md:w-[280px]`
 
-- [ ] **F-M7. fetchJson 타입 안전성**
+- [x] **F-M7. fetchJson 타입 안전성**
   - 파일: `lib/api.ts:10`
   - `undefined as T` 타입 단언 제거
   - 204 응답용 `fetchVoid()` 함수 분리
@@ -150,7 +150,7 @@
   - 파일: `app/page.tsx`, `components/Sidebar.tsx`
   - Sidebar → `<nav>`, 데코레이티브 아이콘 → `aria-hidden="true"`
 
-- [ ] **F-M10. useMemo 최적화**
+- [x] **F-M10. useMemo 최적화**
   - 파일: `app/page.tsx:114`
   - `selectedList = lists.find(...)` → `useMemo`로 감싸기
 

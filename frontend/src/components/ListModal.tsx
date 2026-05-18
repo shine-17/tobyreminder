@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { X } from "lucide-react";
 import { ReminderList } from "@/types";
 
@@ -31,10 +31,49 @@ export default function ListModal({
   const [color, setColor] = useState(editingList?.color ?? "#007AFF");
   const [icon, setIcon] = useState(editingList?.icon ?? "list.bullet");
   const inputRef = useRef<HTMLInputElement>(null);
+  const modalRef = useRef<HTMLDivElement>(null);
+  const previousFocusRef = useRef<HTMLElement | null>(null);
 
+  // Save previous focus and focus input on mount
   useEffect(() => {
+    previousFocusRef.current = document.activeElement as HTMLElement;
     inputRef.current?.focus();
+    return () => {
+      previousFocusRef.current?.focus();
+    };
   }, []);
+
+  // Focus trap: Tab/Shift+Tab cycles within modal
+  const handleKeyDown = useCallback(
+    (e: React.KeyboardEvent) => {
+      if (e.key === "Escape") {
+        onCancel();
+        return;
+      }
+      if (e.key !== "Tab" || !modalRef.current) return;
+
+      const focusable = modalRef.current.querySelectorAll<HTMLElement>(
+        'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+      );
+      if (focusable.length === 0) return;
+
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+
+      if (e.shiftKey) {
+        if (document.activeElement === first) {
+          e.preventDefault();
+          last.focus();
+        }
+      } else {
+        if (document.activeElement === last) {
+          e.preventDefault();
+          first.focus();
+        }
+      }
+    },
+    [onCancel]
+  );
 
   const handleSubmit = () => {
     const trimmed = name.trim();
@@ -43,20 +82,28 @@ export default function ListModal({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30">
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/30"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="list-modal-title"
+      onKeyDown={handleKeyDown}
+    >
       <div
+        ref={modalRef}
         className="w-[340px] rounded-xl p-5 shadow-xl"
         style={{ backgroundColor: "var(--bg-main)" }}
       >
         {/* Header */}
         <div className="flex items-center justify-between mb-4">
           <h2
+            id="list-modal-title"
             className="text-[15px] font-semibold"
             style={{ color: "var(--text-primary)" }}
           >
             {editingList ? "Edit List" : "New List"}
           </h2>
-          <button onClick={onCancel} className="p-1 rounded hover:bg-gray-100">
+          <button onClick={onCancel} className="p-1 rounded hover:bg-gray-100" aria-label="Close dialog">
             <X size={16} style={{ color: "var(--text-secondary)" }} />
           </button>
         </div>
