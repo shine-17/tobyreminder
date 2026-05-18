@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Map;
 import java.util.NoSuchElementException;
 
 @Service
@@ -23,9 +24,10 @@ public class DefaultReminderListService implements ReminderListService {
 
     @Override
     public List<ReminderListResponse> getAll() {
+        Map<Long, Long> countMap = reminderRepository.countActivePerList();
         return reminderListRepository.findAllByOrderByDisplayOrder().stream()
                 .map(list -> ReminderListResponse.from(list,
-                        reminderRepository.countByListIdAndCompletedFalse(list.getId())))
+                        countMap.getOrDefault(list.getId(), 0L)))
                 .toList();
     }
 

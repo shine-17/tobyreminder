@@ -1,10 +1,12 @@
 package cozy.ai.reminder.service;
 
+import cozy.ai.reminder.domain.Reminder;
 import cozy.ai.reminder.domain.ReminderList;
 import cozy.ai.reminder.dto.ReminderListRequest;
 import cozy.ai.reminder.dto.ReminderListResponse;
 import cozy.ai.reminder.service.ports.in.ReminderListService;
 import cozy.ai.reminder.repository.ReminderListRepository;
+import cozy.ai.reminder.repository.ReminderRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -31,8 +33,12 @@ class ReminderListServiceTest {
     @Autowired
     private ReminderListRepository reminderListRepository;
 
+    @Autowired
+    private ReminderRepository reminderRepository;
+
     @BeforeEach
     void setUp() {
+        reminderRepository.deleteAllInBatch();
         reminderListRepository.deleteAllInBatch();
     }
 
@@ -59,6 +65,32 @@ class ReminderListServiceTest {
             List<ReminderListResponse> result = reminderListService.getAll();
 
             assertThat(result).isEmpty();
+        }
+
+        @Test
+        @DisplayName("각 리스트의 미완료 리마인더 수를 정확히 반환한다")
+        void returnsCorrectReminderCountPerList() {
+            ReminderList work = saveList("Work", "#FF3B30", 0);
+            ReminderList personal = saveList("Personal", "#007AFF", 1);
+            ReminderList empty = saveList("Empty", "#34C759", 2);
+
+            // Work: 3 active, 1 completed
+            saveReminder("Task 1", work, false);
+            saveReminder("Task 2", work, false);
+            saveReminder("Task 3", work, false);
+            saveReminder("Done task", work, true);
+
+            // Personal: 1 active
+            saveReminder("Read book", personal, false);
+
+            // Empty: 0 reminders
+
+            List<ReminderListResponse> result = reminderListService.getAll();
+
+            assertThat(result).hasSize(3);
+            assertThat(result.get(0).reminderCount()).isEqualTo(3); // Work
+            assertThat(result.get(1).reminderCount()).isEqualTo(1); // Personal
+            assertThat(result.get(2).reminderCount()).isEqualTo(0); // Empty
         }
     }
 
@@ -213,5 +245,17 @@ class ReminderListServiceTest {
                         .displayOrder(displayOrder)
                         .build()
         );
+    }
+
+    private Reminder saveReminder(String title, ReminderList list, boolean completed) {
+        Reminder reminder = Reminder.builder()
+                .title(title)
+                .displayOrder(0)
+                .list(list)
+                .build();
+        if (completed) {
+            reminder.toggleComplete();
+        }
+        return reminderRepository.save(reminder);
     }
 }
