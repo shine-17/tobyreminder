@@ -125,6 +125,44 @@ class ReminderControllerTest {
     }
 
     @Nested
+    @DisplayName("POST /api/reminders — validation")
+    class CreateValidationTest {
+
+        @Test
+        @DisplayName("빈 title로 생성하면 400을 반환한다")
+        void rejectBlankTitle() throws Exception {
+            mockMvc.perform(post("/api/reminders")
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(String.format("""
+                                    {"title": "", "listId": %d}
+                                    """, defaultList.getId())))
+                    .andExpect(status().isBadRequest());
+        }
+
+        @Test
+        @DisplayName("title 없이 생성하면 400을 반환한다")
+        void rejectNullTitle() throws Exception {
+            mockMvc.perform(post("/api/reminders")
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(String.format("""
+                                    {"memo": "no title", "listId": %d}
+                                    """, defaultList.getId())))
+                    .andExpect(status().isBadRequest());
+        }
+
+        @Test
+        @DisplayName("listId 없이 생성하면 400을 반환한다")
+        void rejectNullListId() throws Exception {
+            mockMvc.perform(post("/api/reminders")
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content("""
+                                    {"title": "Test"}
+                                    """))
+                    .andExpect(status().isBadRequest());
+        }
+    }
+
+    @Nested
     @DisplayName("PATCH /api/reminders/{id}")
     class UpdateTest {
 

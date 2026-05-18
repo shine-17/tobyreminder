@@ -125,6 +125,44 @@ class ReminderListControllerTest {
     }
 
     @Nested
+    @DisplayName("POST /api/lists — validation")
+    class CreateValidationTest {
+
+        @Test
+        @DisplayName("빈 name으로 생성하면 400을 반환한다")
+        void rejectBlankName() throws Exception {
+            mockMvc.perform(post("/api/lists")
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content("""
+                                    {"name": "", "color": "#007AFF"}
+                                    """))
+                    .andExpect(status().isBadRequest());
+        }
+
+        @Test
+        @DisplayName("name 없이 생성하면 400을 반환한다")
+        void rejectNullName() throws Exception {
+            mockMvc.perform(post("/api/lists")
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content("""
+                                    {"color": "#007AFF"}
+                                    """))
+                    .andExpect(status().isBadRequest());
+        }
+
+        @Test
+        @DisplayName("color 없이 생성하면 400을 반환한다")
+        void rejectNullColor() throws Exception {
+            mockMvc.perform(post("/api/lists")
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content("""
+                                    {"name": "Test"}
+                                    """))
+                    .andExpect(status().isBadRequest());
+        }
+    }
+
+    @Nested
     @DisplayName("PATCH /api/lists/{id}")
     class UpdateTest {
 

@@ -9,7 +9,7 @@
   - 리스트마다 별도 COUNT 쿼리 실행 (2N+1)
   - 수정: JOIN + GROUP BY 단일 쿼리로 리스트별 카운트 한 번에 조회
 
-- [ ] **B-H2. Request Validation 추가**
+- [x] **B-H2. Request Validation 추가**
   - 파일: `dto/ReminderRequest.java`, `dto/ReminderListRequest.java`
   - `@NotBlank`, `@NotNull` 등 Jakarta Validation 어노테이션 추가
   - Controller에 `@Valid` 적용

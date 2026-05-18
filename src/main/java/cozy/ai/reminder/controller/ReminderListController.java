@@ -16,6 +16,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import jakarta.validation.Valid;
+
 import java.util.List;
 
 @RestController
@@ -36,7 +38,7 @@ public class ReminderListController {
     }
 
     @PostMapping
-    public ResponseEntity<ReminderListResponse> create(@RequestBody ReminderListRequest request) {
+    public ResponseEntity<ReminderListResponse> create(@Valid @RequestBody ReminderListRequest request) {
         ReminderListResponse created = reminderListService.create(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(created);
     }
