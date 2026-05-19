@@ -157,6 +157,35 @@ class ReminderServiceTest {
             assertThat(result.title()).isEqualTo("New");
             assertThat(result.memo()).isEqualTo("New memo");
         }
+
+        @Test
+        @DisplayName("null title로 업데이트하면 기존 title이 유지된다")
+        void preservesTitleWhenNull() {
+            ReminderResponse created = reminderService.create(new ReminderRequest("Original", "memo", defaultList.getId()));
+
+            ReminderResponse result = reminderService.update(created.id(), new ReminderRequest(null, "new memo", null));
+
+            assertThat(result.title()).isEqualTo("Original");
+            assertThat(result.memo()).isEqualTo("new memo");
+        }
+
+        @Test
+        @DisplayName("null memo로 업데이트하면 기존 memo가 유지된다")
+        void preservesMemoWhenNull() {
+            ReminderResponse created = reminderService.create(new ReminderRequest("Title", "Original memo", defaultList.getId()));
+
+            ReminderResponse result = reminderService.update(created.id(), new ReminderRequest("New Title", null, null));
+
+            assertThat(result.title()).isEqualTo("New Title");
+            assertThat(result.memo()).isEqualTo("Original memo");
+        }
+
+        @Test
+        @DisplayName("존재하지 않는 ID면 예외가 발생한다")
+        void throwsWhenNotFound() {
+            assertThatThrownBy(() -> reminderService.update(99L, new ReminderRequest("Test", null, null)))
+                    .isInstanceOf(NoSuchElementException.class);
+        }
     }
 
     @Nested

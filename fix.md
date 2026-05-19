@@ -104,7 +104,7 @@
   - 파일: `domain/Reminder.java:35`, `domain/ReminderList.java:38`
   - non-nullable 필드는 `Boolean` 래퍼 대신 `boolean` 프리미티브
 
-- [ ] **B-M10. 테스트 엣지 케이스 추가**
+- [x] **B-M10. 테스트 엣지 케이스 추가**
   - 빈 리스트 reorder, 리스트 삭제 시 리마인더 연쇄 삭제 검증, 빈 문자열 vs null 업데이트
 
 ### Frontend

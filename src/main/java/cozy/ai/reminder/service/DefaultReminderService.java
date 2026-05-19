@@ -38,6 +38,7 @@ public class DefaultReminderService implements ReminderService {
                 .list(list)
                 .build();
 
+        list.getReminders().add(reminder);
         Reminder saved = reminderRepository.save(reminder);
         return ReminderResponse.from(saved);
     }
@@ -83,6 +84,7 @@ public class DefaultReminderService implements ReminderService {
     @Transactional
     public void delete(Long id) {
         Reminder reminder = findById(id);
+        reminder.getList().getReminders().remove(reminder);
         reminderRepository.delete(reminder);
     }
 

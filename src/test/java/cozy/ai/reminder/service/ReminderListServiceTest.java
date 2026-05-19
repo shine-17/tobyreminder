@@ -1,10 +1,11 @@
 package cozy.ai.reminder.service;
 
-import cozy.ai.reminder.domain.Reminder;
 import cozy.ai.reminder.domain.ReminderList;
 import cozy.ai.reminder.dto.ReminderListRequest;
 import cozy.ai.reminder.dto.ReminderListResponse;
+import cozy.ai.reminder.dto.ReminderRequest;
 import cozy.ai.reminder.service.ports.in.ReminderListService;
+import cozy.ai.reminder.service.ports.in.ReminderService;
 import cozy.ai.reminder.repository.ReminderListRepository;
 import cozy.ai.reminder.repository.ReminderRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -29,6 +30,9 @@ class ReminderListServiceTest {
 
     @Autowired
     private ReminderListService reminderListService;
+
+    @Autowired
+    private ReminderService reminderService;
 
     @Autowired
     private ReminderListRepository reminderListRepository;
@@ -75,13 +79,14 @@ class ReminderListServiceTest {
             ReminderList empty = saveList("Empty", "#34C759", 2);
 
             // Work: 3 active, 1 completed
-            saveReminder("Task 1", work, false);
-            saveReminder("Task 2", work, false);
-            saveReminder("Task 3", work, false);
-            saveReminder("Done task", work, true);
+            reminderService.create(new ReminderRequest("Task 1", null, work.getId()));
+            reminderService.create(new ReminderRequest("Task 2", null, work.getId()));
+            reminderService.create(new ReminderRequest("Task 3", null, work.getId()));
+            var doneResp = reminderService.create(new ReminderRequest("Done task", null, work.getId()));
+            reminderService.toggleComplete(doneResp.id());
 
             // Personal: 1 active
-            saveReminder("Read book", personal, false);
+            reminderService.create(new ReminderRequest("Read book", null, personal.getId()));
 
             // Empty: 0 reminders
 
@@ -219,6 +224,27 @@ class ReminderListServiceTest {
     }
 
     @Nested
+    @DisplayName("delete — cascade")
+    class DeleteCascadeTest {
+
+        @Test
+        @DisplayName("리스트 삭제 시 소속 리마인더도 연쇄 삭제된다")
+        void deletesRemindersWhenListDeleted() {
+            ReminderList list = saveList("Work", "#FF3B30", 0);
+            reminderService.create(new ReminderRequest("Task 1", null, list.getId()));
+            reminderService.create(new ReminderRequest("Task 2", null, list.getId()));
+            var doneResp = reminderService.create(new ReminderRequest("Done task", null, list.getId()));
+            reminderService.toggleComplete(doneResp.id());
+
+            reminderListService.delete(list.getId());
+
+            assertThat(reminderListRepository.findById(list.getId())).isEmpty();
+            assertThat(reminderRepository.findByListIdAndCompletedFalseOrderByDisplayOrder(list.getId())).isEmpty();
+            assertThat(reminderRepository.findByListIdAndCompletedTrueOrderByCompletedAtDesc(list.getId())).isEmpty();
+        }
+    }
+
+    @Nested
     @DisplayName("reorder")
     class ReorderTest {
 
@@ -265,15 +291,4 @@ class ReminderListServiceTest {
         );
     }
 
-    private Reminder saveReminder(String title, ReminderList list, boolean completed) {
-        Reminder reminder = Reminder.builder()
-                .title(title)
-                .displayOrder(0)
-                .list(list)
-                .build();
-        if (completed) {
-            reminder.toggleComplete();
-        }
-        return reminderRepository.save(reminder);
-    }
 }
