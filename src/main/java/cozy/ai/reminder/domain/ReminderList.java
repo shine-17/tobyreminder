@@ -1,10 +1,12 @@
 package cozy.ai.reminder.domain;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -12,6 +14,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "reminder_list")
@@ -35,20 +39,23 @@ public class ReminderList {
     private Integer displayOrder;
 
     @Column(nullable = false)
-    private Boolean isDefault = false;
+    private boolean isDefault = false;
 
     @Column(updatable = false)
     private LocalDateTime createdAt;
 
     private LocalDateTime updatedAt;
 
+    @OneToMany(mappedBy = "list", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Reminder> reminders = new ArrayList<>();
+
     @Builder
-    public ReminderList(String name, String color, String icon, Integer displayOrder, Boolean isDefault) {
+    public ReminderList(String name, String color, String icon, Integer displayOrder, boolean isDefault) {
         this.name = name;
         this.color = color;
         this.icon = icon;
         this.displayOrder = displayOrder;
-        this.isDefault = isDefault != null ? isDefault : false;
+        this.isDefault = isDefault;
         this.createdAt = LocalDateTime.now();
         this.updatedAt = this.createdAt;
     }

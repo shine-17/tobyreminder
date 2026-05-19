@@ -67,15 +67,15 @@
 
 ### Backend
 
-- [ ] **B-M1. DB 인덱스 추가**
+- [x] **B-M1. DB 인덱스 추가**
   - 파일: `domain/Reminder.java`, `domain/ReminderList.java`
   - `@Table(indexes = { @Index(columnList = "list_id, completed"), @Index(columnList = "list_id, display_order") })`
 
-- [ ] **B-M2. GlobalExceptionHandler 확장**
+- [x] **B-M2. GlobalExceptionHandler 확장**
   - 파일: `controller/GlobalExceptionHandler.java`
   - `MethodArgumentNotValidException`, `HttpMessageNotReadableException`, 일반 `Exception` 핸들러 추가
 
-- [ ] **B-M3. Cascade 설정**
+- [x] **B-M3. Cascade 설정**
   - 파일: `domain/ReminderList.java`
   - `@OneToMany(mappedBy = "list", cascade = CascadeType.ALL, orphanRemoval = true)` 추가
   - `DefaultReminderListService.delete()`에서 수동 삭제 로직 제거
@@ -84,7 +84,7 @@
   - 파일: `service/DefaultReminderListService.java:73-78`, `service/DefaultReminderService.java`
   - N건 개별 UPDATE → 배치 UPDATE 또는 `@Modifying @Query` 사용
 
-- [ ] **B-M5. CORS 헤더 화이트리스트**
+- [x] **B-M5. CORS 헤더 화이트리스트**
   - 파일: `config/WebConfig.java`
   - `allowedHeaders("*")` → `allowedHeaders("Content-Type", "Authorization")` 제한
 
@@ -96,11 +96,11 @@
   - 파일: `application.yml`
   - `show-sql: ${JPA_SHOW_SQL:false}`, `format_sql: ${JPA_FORMAT_SQL:false}`
 
-- [ ] **B-M8. @Builder on Records 제거**
+- [x] **B-M8. @Builder on Records 제거**
   - 파일: `dto/ReminderResponse.java`, `dto/ReminderListResponse.java`
   - Record의 canonical constructor 또는 정적 팩터리 메서드로 대체
 
-- [ ] **B-M9. Boolean → boolean 프리미티브**
+- [x] **B-M9. Boolean → boolean 프리미티브**
   - 파일: `domain/Reminder.java:35`, `domain/ReminderList.java:38`
   - non-nullable 필드는 `Boolean` 래퍼 대신 `boolean` 프리미티브
 

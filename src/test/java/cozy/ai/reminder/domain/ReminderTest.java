@@ -30,7 +30,7 @@ class ReminderTest {
             assertThat(reminder.getMemo()).isEqualTo("Milk and eggs");
             assertThat(reminder.getDisplayOrder()).isEqualTo(0);
             assertThat(reminder.getList()).isEqualTo(list);
-            assertThat(reminder.getCompleted()).isFalse();
+            assertThat(reminder.isCompleted()).isFalse();
             assertThat(reminder.getCompletedAt()).isNull();
         }
 
@@ -96,7 +96,7 @@ class ReminderTest {
 
             reminder.toggleComplete();
 
-            assertThat(reminder.getCompleted()).isTrue();
+            assertThat(reminder.isCompleted()).isTrue();
             assertThat(reminder.getCompletedAt()).isNotNull();
         }
 
@@ -108,7 +108,7 @@ class ReminderTest {
 
             reminder.toggleComplete(); // 미완료
 
-            assertThat(reminder.getCompleted()).isFalse();
+            assertThat(reminder.isCompleted()).isFalse();
             assertThat(reminder.getCompletedAt()).isNull();
         }
 

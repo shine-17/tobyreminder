@@ -1,16 +1,14 @@
 package cozy.ai.reminder.dto;
 
 import cozy.ai.reminder.domain.Reminder;
-import lombok.Builder;
 
 import java.time.LocalDateTime;
 
-@Builder
 public record ReminderResponse(
         Long id,
         String title,
         String memo,
-        Boolean completed,
+        boolean completed,
         LocalDateTime completedAt,
         Integer displayOrder,
         Long listId,
@@ -18,16 +16,16 @@ public record ReminderResponse(
         LocalDateTime updatedAt
 ) {
     public static ReminderResponse from(Reminder reminder) {
-        return ReminderResponse.builder()
-                .id(reminder.getId())
-                .title(reminder.getTitle())
-                .memo(reminder.getMemo())
-                .completed(reminder.getCompleted())
-                .completedAt(reminder.getCompletedAt())
-                .displayOrder(reminder.getDisplayOrder())
-                .listId(reminder.getListId())
-                .createdAt(reminder.getCreatedAt())
-                .updatedAt(reminder.getUpdatedAt())
-                .build();
+        return new ReminderResponse(
+                reminder.getId(),
+                reminder.getTitle(),
+                reminder.getMemo(),
+                reminder.isCompleted(),
+                reminder.getCompletedAt(),
+                reminder.getDisplayOrder(),
+                reminder.getListId(),
+                reminder.getCreatedAt(),
+                reminder.getUpdatedAt()
+        );
     }
 }

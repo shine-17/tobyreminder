@@ -6,6 +6,7 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Index;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
@@ -17,7 +18,10 @@ import lombok.NoArgsConstructor;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "reminder")
+@Table(name = "reminder", indexes = {
+        @Index(name = "idx_reminder_list_completed", columnList = "list_id, completed"),
+        @Index(name = "idx_reminder_list_order", columnList = "list_id, display_order")
+})
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Reminder {
@@ -32,7 +36,7 @@ public class Reminder {
     private String memo;
 
     @Column(nullable = false)
-    private Boolean completed = false;
+    private boolean completed = false;
 
     private LocalDateTime completedAt;
 

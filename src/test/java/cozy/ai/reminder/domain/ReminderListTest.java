@@ -29,7 +29,7 @@ class ReminderListTest {
             assertThat(list.getColor()).isEqualTo("#007AFF");
             assertThat(list.getIcon()).isEqualTo("list.bullet");
             assertThat(list.getDisplayOrder()).isEqualTo(0);
-            assertThat(list.getIsDefault()).isTrue();
+            assertThat(list.isDefault()).isTrue();
         }
 
         @Test
@@ -41,7 +41,7 @@ class ReminderListTest {
                     .displayOrder(1)
                     .build();
 
-            assertThat(list.getIsDefault()).isFalse();
+            assertThat(list.isDefault()).isFalse();
         }
 
         @Test
