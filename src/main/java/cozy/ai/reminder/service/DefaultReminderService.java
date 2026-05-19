@@ -32,8 +32,8 @@ public class DefaultReminderService implements ReminderService {
         int nextOrder = reminderRepository.countByListIdAndCompletedFalse(list.getId());
 
         Reminder reminder = Reminder.builder()
-                .title(request.title())
-                .memo(request.memo())
+                .title(HtmlSanitizer.sanitize(request.title()))
+                .memo(HtmlSanitizer.sanitize(request.memo()))
                 .displayOrder(nextOrder)
                 .list(list)
                 .build();
@@ -67,7 +67,7 @@ public class DefaultReminderService implements ReminderService {
     @Transactional
     public ReminderResponse update(Long id, ReminderRequest request) {
         Reminder reminder = findById(id);
-        reminder.update(request.title(), request.memo());
+        reminder.update(HtmlSanitizer.sanitize(request.title()), HtmlSanitizer.sanitize(request.memo()));
         return ReminderResponse.from(reminder);
     }
 

@@ -44,9 +44,9 @@ public class DefaultReminderListService implements ReminderListService {
         int nextOrder = reminderListRepository.countBy();
 
         ReminderList list = ReminderList.builder()
-                .name(request.name())
+                .name(HtmlSanitizer.sanitize(request.name()))
                 .color(request.color())
-                .icon(request.icon())
+                .icon(HtmlSanitizer.sanitize(request.icon()))
                 .displayOrder(nextOrder)
                 .build();
 
@@ -58,7 +58,7 @@ public class DefaultReminderListService implements ReminderListService {
     @Transactional
     public ReminderListResponse update(Long id, ReminderListRequest request) {
         ReminderList list = findById(id);
-        list.update(request.name(), request.color(), request.icon());
+        list.update(HtmlSanitizer.sanitize(request.name()), request.color(), HtmlSanitizer.sanitize(request.icon()));
         return ReminderListResponse.from(list);
     }
 

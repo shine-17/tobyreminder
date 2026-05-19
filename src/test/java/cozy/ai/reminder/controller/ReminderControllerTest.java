@@ -163,6 +163,35 @@ class ReminderControllerTest {
     }
 
     @Nested
+    @DisplayName("POST /api/reminders — XSS sanitization")
+    class XssSanitizationTest {
+
+        @Test
+        @DisplayName("HTML 태그가 포함된 title은 이스케이프되어 저장된다")
+        void sanitizesHtmlInTitle() throws Exception {
+            mockMvc.perform(post("/api/reminders")
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(String.format("""
+                                    {"title": "<script>alert('xss')</script>", "listId": %d}
+                                    """, defaultList.getId())))
+                    .andExpect(status().isCreated())
+                    .andExpect(jsonPath("$.title").value(org.hamcrest.Matchers.not(org.hamcrest.Matchers.containsString("<script>"))));
+        }
+
+        @Test
+        @DisplayName("HTML 태그가 포함된 memo는 이스케이프되어 저장된다")
+        void sanitizesHtmlInMemo() throws Exception {
+            mockMvc.perform(post("/api/reminders")
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(String.format("""
+                                    {"title": "Test", "memo": "<img onerror='alert(1)'>", "listId": %d}
+                                    """, defaultList.getId())))
+                    .andExpect(status().isCreated())
+                    .andExpect(jsonPath("$.memo").value(org.hamcrest.Matchers.not(org.hamcrest.Matchers.containsString("<img"))));
+        }
+    }
+
+    @Nested
     @DisplayName("PATCH /api/reminders/{id}")
     class UpdateTest {
 

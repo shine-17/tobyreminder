@@ -163,6 +163,23 @@ class ReminderListControllerTest {
     }
 
     @Nested
+    @DisplayName("POST /api/lists — XSS sanitization")
+    class XssSanitizationTest {
+
+        @Test
+        @DisplayName("HTML 태그가 포함된 name은 이스케이프되어 저장된다")
+        void sanitizesHtmlInName() throws Exception {
+            mockMvc.perform(post("/api/lists")
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content("""
+                                    {"name": "<script>alert('xss')</script>", "color": "#007AFF"}
+                                    """))
+                    .andExpect(status().isCreated())
+                    .andExpect(jsonPath("$.name").value(org.hamcrest.Matchers.not(org.hamcrest.Matchers.containsString("<script>"))));
+        }
+    }
+
+    @Nested
     @DisplayName("PATCH /api/lists/{id}")
     class UpdateTest {
 

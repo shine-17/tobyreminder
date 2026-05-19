@@ -88,7 +88,7 @@
   - 파일: `config/WebConfig.java`
   - `allowedHeaders("*")` → `allowedHeaders("Content-Type", "Authorization")` 제한
 
-- [ ] **B-M6. XSS 입력 살균**
+- [x] **B-M6. XSS 입력 살균**
   - 파일: DTO 또는 서비스 레이어
   - `title`, `memo`, `name` 필드에 HTML 이스케이프 처리
 
