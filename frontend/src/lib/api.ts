@@ -1,6 +1,6 @@
 import { Reminder, ReminderList } from "@/types";
 
-const BASE = "/api";
+const BASE = process.env.NEXT_PUBLIC_API_BASE ?? "/api";
 
 async function fetchJson<T>(
   url: string,

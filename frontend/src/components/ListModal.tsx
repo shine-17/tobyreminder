@@ -154,6 +154,7 @@ export default function ListModal({
           onChange={(e) => setName(e.target.value)}
           onKeyDown={(e) => e.key === "Enter" && handleSubmit()}
           placeholder="List Name"
+          maxLength={100}
           className="w-full text-[13px] leading-8 px-3 rounded-lg mb-4 outline-none"
           style={{
             backgroundColor: "var(--bg-sidebar)",

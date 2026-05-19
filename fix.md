@@ -177,22 +177,22 @@
 
 ### Backend
 
-- [ ] **B-L1. Ports/Out 레이어 도입** — 리포지토리 추상화 인터페이스
+- [x] **B-L1. Ports/Out 레이어 도입** — 리포지토리 추상화 인터페이스
 - [ ] **B-L2. DTO 패키지 분리** — `dto/request/`, `dto/response/`
-- [ ] **B-L3. Stream 연산 최적화** — `DefaultReminderService.getByListId()` 불필요 ArrayList 제거
-- [ ] **B-L4. isDefault 네이밍** — `getIsDefault()` → Lombok fluent 또는 필드명 변경
-- [ ] **B-L5. HikariCP 설정** — 커넥션 풀 사이즈 명시 (프로덕션 대비)
-- [ ] **B-L6. SQL init mode 환경별 분리** — `mode: ${SQL_INIT_MODE:never}`
+- [x] **B-L3. Stream 연산 최적화** — `DefaultReminderService.getByListId()` 불필요 ArrayList 제거
+- [x] **B-L4. isDefault 네이밍** — `getIsDefault()` → Lombok fluent 또는 필드명 변경
+- [x] **B-L5. HikariCP 설정** — 커넥션 풀 사이즈 명시 (프로덕션 대비)
+- [x] **B-L6. SQL init mode 환경별 분리** — `mode: ${SQL_INIT_MODE:never}`
 - [ ] **B-L7. Rate Limiting** — 프로덕션 환경 요청 제한 설정
 
 ### Frontend
 
 - [ ] **F-L1. 다크 모드 지원** — `globals.css`에 `prefers-color-scheme: dark` 대응
 - [ ] **F-L2. 삭제 Undo 기능** — 토스트 + 되돌리기 버튼
-- [ ] **F-L3. ListModal 입력값 검증 강화** — 최대 길이 제한, 특수문자 처리
-- [ ] **F-L4. 환경변수 API URL** — `lib/api.ts` BASE를 `NEXT_PUBLIC_API_BASE`로
-- [ ] **F-L5. next.config.mjs 환경변수** — rewrite destination을 `BACKEND_URL`로
+- [x] **F-L3. ListModal 입력값 검증 강화** — 최대 길이 제한, 특수문자 처리
+- [x] **F-L4. 환경변수 API URL** — `lib/api.ts` BASE를 `NEXT_PUBLIC_API_BASE`로
+- [x] **F-L5. next.config.mjs 환경변수** — rewrite destination을 `BACKEND_URL`로
 - [ ] **F-L6. API 응답 런타임 검증** — zod 등으로 응답 스키마 검증
-- [ ] **F-L7. 데코레이티브 아이콘 aria-hidden** — `Sidebar.tsx` 검색 아이콘 등
+- [x] **F-L7. 데코레이티브 아이콘 aria-hidden** — `Sidebar.tsx` 검색 아이콘 등
 - [ ] **F-L8. confirm() → 커스텀 확인 모달** — 브라우저 네이티브 대화상자 교체
 - [ ] **F-L9. 완료 후 포커스 관리** — 리마인더 완료 애니메이션 후 다음 항목으로 포커스 이동

@@ -52,15 +52,15 @@ public class DefaultReminderService implements ReminderService {
     @Override
     public List<ReminderResponse> getByListId(Long listId, boolean includeCompleted) {
         List<Reminder> active = reminderRepository.findByListIdAndCompletedFalseOrderByDisplayOrder(listId);
-        List<ReminderResponse> result = new ArrayList<>(active.stream()
-                .map(ReminderResponse::from)
-                .toList());
 
-        if (includeCompleted) {
-            List<Reminder> completed = reminderRepository.findByListIdAndCompletedTrueOrderByCompletedAtDesc(listId);
-            result.addAll(completed.stream().map(ReminderResponse::from).toList());
+        if (!includeCompleted) {
+            return active.stream().map(ReminderResponse::from).toList();
         }
 
+        List<Reminder> completed = reminderRepository.findByListIdAndCompletedTrueOrderByCompletedAtDesc(listId);
+        List<ReminderResponse> result = new ArrayList<>(active.size() + completed.size());
+        active.forEach(r -> result.add(ReminderResponse.from(r)));
+        completed.forEach(r -> result.add(ReminderResponse.from(r)));
         return result;
     }
 

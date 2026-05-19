@@ -58,7 +58,7 @@ export default function SidebarListItem({
             height: "22px",
           }}
         >
-          <List size={12} color="white" strokeWidth={2.5} />
+          <List size={12} color="white" strokeWidth={2.5} aria-hidden="true" />
         </div>
 
         {/* List name */}

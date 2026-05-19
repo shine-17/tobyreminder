@@ -1,6 +1,7 @@
 package cozy.ai.reminder.repository;
 
 import cozy.ai.reminder.domain.Reminder;
+import cozy.ai.reminder.service.ports.out.ReminderPort;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
@@ -8,7 +9,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-public interface ReminderRepository extends JpaRepository<Reminder, Long> {
+public interface ReminderRepository extends JpaRepository<Reminder, Long>, ReminderPort {
 
     /**
      * 리스트별 미완료 리마인더 수를 한 번의 쿼리로 조회한다.
