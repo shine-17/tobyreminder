@@ -12,6 +12,7 @@ import {
 import Sidebar from "@/components/Sidebar";
 import ReminderListView from "@/components/ReminderListView";
 import ListModal from "@/components/ListModal";
+import ToastContainer, { showToast } from "@/components/Toast";
 
 export default function Home() {
   const [lists, setLists] = useState<ReminderList[]>([]);
@@ -31,7 +32,7 @@ export default function Home() {
       return data;
     } catch (err) {
       if (err instanceof DOMException && err.name === "AbortError") return [];
-      console.error(err);
+      showToast("Failed to load lists");
       return [];
     }
   }, []);
@@ -64,7 +65,7 @@ export default function Home() {
         setReminders(data);
       } catch (err) {
         if (err instanceof DOMException && err.name === "AbortError") return;
-        console.error(err);
+        showToast("Failed to load reminders");
       }
     },
     [selectedListId]
@@ -106,7 +107,7 @@ export default function Home() {
           setSelectedListId(updated.length > 0 ? updated[0].id : null);
         }
       } catch (err) {
-        console.error(err);
+        showToast("Failed to delete list");
       }
     },
     [fetchLists, selectedListId]
@@ -127,7 +128,7 @@ export default function Home() {
       await fetchLists();
       setShowListModal(false);
     } catch (err) {
-      console.error(err);
+      showToast("Failed to save list");
     }
   };
 
@@ -167,6 +168,8 @@ export default function Home() {
           </div>
         )}
       </main>
+
+      <ToastContainer />
 
       {/* List Modal */}
       {showListModal && (

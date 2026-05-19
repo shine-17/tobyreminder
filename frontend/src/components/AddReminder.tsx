@@ -3,6 +3,7 @@
 import { useState, useRef } from "react";
 import { Plus } from "lucide-react";
 import { createReminder } from "@/lib/api";
+import { showToast } from "./Toast";
 
 interface AddReminderProps {
   listId: number;
@@ -17,12 +18,14 @@ export default function AddReminder({
 }: AddReminderProps) {
   const [isEditing, setIsEditing] = useState(false);
   const [title, setTitle] = useState("");
+  const [submitting, setSubmitting] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
 
   const handleSubmit = async () => {
     const trimmed = title.trim();
-    if (!trimmed) return;
+    if (!trimmed || submitting) return;
 
+    setSubmitting(true);
     try {
       await createReminder({ title: trimmed, listId });
       setTitle("");
@@ -30,7 +33,9 @@ export default function AddReminder({
       // Keep focus for continuous input
       setTimeout(() => inputRef.current?.focus(), 0);
     } catch (err) {
-      console.error(err);
+      showToast("Failed to add reminder");
+    } finally {
+      setSubmitting(false);
     }
   };
 

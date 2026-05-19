@@ -1,11 +1,12 @@
 "use client";
 
-import { useState, useCallback, useEffect } from "react";
+import { useState, useCallback, useEffect, useRef } from "react";
 import { ReminderList, Reminder } from "@/types";
 import ReminderRow from "./ReminderRow";
 import ReminderDetail from "./ReminderDetail";
 import AddReminder from "./AddReminder";
 import { toggleComplete } from "@/lib/api";
+import { showToast } from "./Toast";
 
 interface ReminderListViewProps {
   list: ReminderList;
@@ -27,7 +28,7 @@ export default function ReminderListView({
         await toggleComplete(id);
         onRefresh();
       } catch (err) {
-        console.error(err);
+        showToast("Failed to toggle reminder");
       }
     },
     [onRefresh]

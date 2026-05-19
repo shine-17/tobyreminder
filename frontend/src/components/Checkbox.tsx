@@ -4,9 +4,14 @@ interface CheckboxProps {
   checked: boolean;
   color: string;
   onChange: () => void;
+  label?: string;
 }
 
-export default function Checkbox({ checked, color, onChange }: CheckboxProps) {
+export default function Checkbox({ checked, color, onChange, label }: CheckboxProps) {
+  const ariaLabel = label
+    ? `${checked ? "Mark incomplete" : "Mark complete"}: ${label}`
+    : checked ? "Mark incomplete" : "Mark complete";
+
   return (
     <button
       onClick={onChange}
@@ -18,7 +23,7 @@ export default function Checkbox({ checked, color, onChange }: CheckboxProps) {
         backgroundColor: checked ? color : "transparent",
         transform: checked ? "scale(1)" : "scale(1)",
       }}
-      aria-label={checked ? "Mark incomplete" : "Mark complete"}
+      aria-label={ariaLabel}
     >
       {checked && (
         <svg

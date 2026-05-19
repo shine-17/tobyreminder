@@ -5,6 +5,7 @@ import { Trash2 } from "lucide-react";
 import { Reminder } from "@/types";
 import { updateReminder, deleteReminder } from "@/lib/api";
 import Checkbox from "./Checkbox";
+import { showToast } from "./Toast";
 
 interface ReminderDetailProps {
   reminder: Reminder;
@@ -52,7 +53,7 @@ export default function ReminderDetail({
         });
         onSaved();
       } catch (err) {
-        console.error(err);
+        showToast("Failed to save reminder");
       } finally {
         setSaving(false);
       }
@@ -78,13 +79,18 @@ export default function ReminderDetail({
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
+  const [deleting, setDeleting] = useState(false);
+
   const handleDelete = async () => {
+    if (deleting) return;
+    setDeleting(true);
     try {
       await deleteReminder(reminder.id);
       onSaved();
       onClose();
     } catch (err) {
-      console.error(err);
+      showToast("Failed to delete reminder");
+      setDeleting(false);
     }
   };
 
@@ -106,6 +112,7 @@ export default function ReminderDetail({
           checked={reminder.completed}
           color={listColor}
           onChange={() => onToggleComplete(reminder.id)}
+          label={reminder.title}
         />
       </div>
 
@@ -135,7 +142,8 @@ export default function ReminderDetail({
       {/* Delete button */}
       <button
         onClick={handleDelete}
-        className="shrink-0 p-1 rounded hover:bg-red-50 transition-colors"
+        disabled={deleting || saving}
+        className="shrink-0 p-1 rounded hover:bg-red-50 transition-colors disabled:opacity-40"
         title="Delete"
         aria-label="Delete reminder"
       >

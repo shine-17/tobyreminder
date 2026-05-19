@@ -25,9 +25,10 @@ export default function Sidebar({
   const totalCount = lists.reduce((sum, l) => sum + l.reminderCount, 0);
 
   return (
-    <aside
-      className="flex flex-col w-[280px] h-full overflow-y-auto"
+    <nav
+      className="hidden md:flex flex-col w-full md:w-[280px] h-full overflow-y-auto"
       style={{ backgroundColor: "var(--bg-sidebar)" }}
+      aria-label="Reminder lists"
     >
       {/* Search placeholder */}
       <div className="px-3 pt-3 pb-1">
@@ -47,6 +48,7 @@ export default function Sidebar({
             strokeWidth="2"
             strokeLinecap="round"
             strokeLinejoin="round"
+            aria-hidden="true"
           >
             <circle cx="11" cy="11" r="8" />
             <path d="m21 21-4.3-4.3" />
@@ -68,16 +70,25 @@ export default function Sidebar({
 
       {/* User lists */}
       <div className="flex flex-col gap-0.5 px-2 flex-1">
-        {lists.map((list) => (
-          <SidebarListItem
-            key={list.id}
-            list={list}
-            isSelected={list.id === selectedListId}
-            onClick={() => onSelectList(list.id)}
-            onEdit={() => onEditList(list)}
-            onDelete={() => onDeleteList(list)}
-          />
-        ))}
+        {lists.length === 0 ? (
+          <div
+            className="text-center py-8 text-[12px]"
+            style={{ color: "var(--text-tertiary)" }}
+          >
+            No lists yet. Tap &quot;Add List&quot; to get started.
+          </div>
+        ) : (
+          lists.map((list) => (
+            <SidebarListItem
+              key={list.id}
+              list={list}
+              isSelected={list.id === selectedListId}
+              onClick={() => onSelectList(list.id)}
+              onEdit={() => onEditList(list)}
+              onDelete={() => onDeleteList(list)}
+            />
+          ))
+        )}
       </div>
 
       {/* Add List button */}
@@ -91,6 +102,6 @@ export default function Sidebar({
           Add List
         </button>
       </div>
-    </aside>
+    </nav>
   );
 }

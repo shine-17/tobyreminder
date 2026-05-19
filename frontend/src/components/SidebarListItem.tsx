@@ -68,6 +68,7 @@ export default function SidebarListItem({
             color: "var(--text-primary)",
             fontWeight: isSelected ? 600 : 400,
           }}
+          title={list.name}
         >
           {list.name}
         </span>
@@ -84,17 +85,19 @@ export default function SidebarListItem({
       </button>
 
       {/* Context menu */}
-      {showMenu && (
-        <div
-          ref={menuRef}
-          className="fixed z-50 rounded-lg py-1 shadow-xl min-w-[140px]"
-          style={{
-            left: menuPos.x,
-            top: menuPos.y,
-            backgroundColor: "var(--bg-main)",
-            border: "1px solid var(--bg-reminder-active)",
-          }}
-        >
+      <div
+        ref={menuRef}
+        className="fixed z-50 rounded-lg py-1 shadow-xl min-w-[140px]"
+        style={{
+          left: menuPos.x,
+          top: menuPos.y,
+          backgroundColor: "var(--bg-main)",
+          border: "1px solid var(--bg-reminder-active)",
+          visibility: showMenu ? "visible" : "hidden",
+          opacity: showMenu ? 1 : 0,
+          pointerEvents: showMenu ? "auto" : "none",
+        }}
+      >
           <button
             onClick={() => {
               setShowMenu(false);
@@ -116,7 +119,6 @@ export default function SidebarListItem({
             Delete List
           </button>
         </div>
-      )}
     </>
   );
 }

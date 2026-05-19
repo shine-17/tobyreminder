@@ -109,28 +109,28 @@
 
 ### Frontend
 
-- [ ] **F-M1. 에러 UI 표시**
+- [x] **F-M1. 에러 UI 표시**
   - 파일: 전체 컴포넌트
   - `console.error` → 사용자 대상 토스트/알림 메시지 표시
   - 신규: `components/Toast.tsx` 또는 에러 상태 관리
 
-- [ ] **F-M2. 로딩 상태 추가**
+- [x] **F-M2. 로딩 상태 추가**
   - 파일: `components/ReminderDetail.tsx`, `app/page.tsx`
   - 저장/삭제 중 버튼 비활성화, 스피너 표시로 중복 클릭 방지
 
-- [ ] **F-M3. Optimistic UI 적용**
+- [x] **F-M3. Optimistic UI 적용**
   - 파일: `app/page.tsx` (삭제), `components/ReminderRow.tsx` (완료)
   - 즉시 UI 반영 후 API 응답 시 확인/롤백
 
-- [ ] **F-M4. AddReminder 이중 제출 방지**
+- [x] **F-M4. AddReminder 이중 제출 방지**
   - 파일: `components/AddReminder.tsx`
   - Enter + onBlur 동시 트리거 방지 (submitting 플래그 또는 setTimeout)
 
-- [ ] **F-M5. inline style → Tailwind 전환**
+- [x] **F-M5. inline style → Tailwind 전환**
   - 파일: `components/ReminderRow.tsx`, `components/Sidebar.tsx`, `components/SmartListCards.tsx` 등
   - `style={{}}` → Tailwind 유틸리티 클래스로 이관 (CSS 변수 참조는 유지)
 
-- [ ] **F-M6. 반응형 레이아웃**
+- [x] **F-M6. 반응형 레이아웃**
   - 파일: `app/page.tsx`, `components/Sidebar.tsx`
   - Sidebar 280px 고정 → 모바일에서 숨김/드로어 패턴
   - `hidden md:flex`, `w-full md:w-[280px]`
@@ -140,13 +140,13 @@
   - `undefined as T` 타입 단언 제거
   - 204 응답용 `fetchVoid()` 함수 분리
 
-- [ ] **F-M8. ARIA 레이블 보강**
+- [x] **F-M8. ARIA 레이블 보강**
   - 파일: `components/Checkbox.tsx`, `components/ListModal.tsx`
   - 체크박스에 리마인더 제목 포함한 aria-label
   - 모달에 `role="dialog"`, `aria-labelledby` 추가
   - 아이콘 버튼에 `aria-label` 추가
 
-- [ ] **F-M9. 시맨틱 HTML 개선**
+- [x] **F-M9. 시맨틱 HTML 개선**
   - 파일: `app/page.tsx`, `components/Sidebar.tsx`
   - Sidebar → `<nav>`, 데코레이티브 아이콘 → `aria-hidden="true"`
 
@@ -154,19 +154,19 @@
   - 파일: `app/page.tsx:114`
   - `selectedList = lists.find(...)` → `useMemo`로 감싸기
 
-- [ ] **F-M11. 긴 텍스트 처리**
+- [x] **F-M11. 긴 텍스트 처리**
   - 파일: `components/SidebarListItem.tsx:66`, `components/ReminderRow.tsx:79`
   - truncate된 텍스트에 `title` 속성으로 툴팁 추가
 
-- [ ] **F-M12. Sidebar 빈 상태 UI**
+- [x] **F-M12. Sidebar 빈 상태 UI**
   - 파일: `components/Sidebar.tsx`
   - 리스트 0개일 때 "리스트를 만들어보세요" 안내 메시지
 
-- [ ] **F-M13. 컨텍스트 메뉴 렌더링 최적화**
+- [x] **F-M13. 컨텍스트 메뉴 렌더링 최적화**
   - 파일: `components/SidebarListItem.tsx:87-119`
   - 조건부 렌더링 대신 Portal 또는 CSS visibility 활용
 
-- [ ] **F-M14. refreshAll 안정화**
+- [x] **F-M14. refreshAll 안정화**
   - 파일: `app/page.tsx:66-69`
   - `refreshAll`이 `selectedListId` 변경마다 재생성 → 자식 불필요 리렌더
   - 수정: ref 기반 최신값 참조 패턴

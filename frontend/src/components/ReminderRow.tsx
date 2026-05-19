@@ -31,9 +31,8 @@ function ReminderRowInner({
 
   return (
     <div
-      className="flex items-start gap-3 py-2.5 px-2 rounded-lg transition-all duration-150 group cursor-pointer"
+      className="flex items-start gap-3 py-2.5 px-2 rounded-lg transition-all duration-150 group cursor-pointer min-h-[36px]"
       style={{
-        minHeight: "36px",
         opacity: fading ? 0 : 1,
         transition: fading
           ? "opacity 0.5s ease, max-height 0.5s ease"
@@ -60,6 +59,7 @@ function ReminderRowInner({
           checked={reminder.completed}
           color={listColor}
           onChange={() => {}}
+          label={reminder.title}
         />
       </div>
 
@@ -67,7 +67,7 @@ function ReminderRowInner({
       <div className="flex-1 min-w-0">
         {/* Title */}
         <div
-          className="text-[13px] leading-5"
+          className="text-[13px] leading-5 truncate"
           style={{
             color: reminder.completed
               ? "var(--text-tertiary)"
@@ -75,6 +75,7 @@ function ReminderRowInner({
             textDecoration: reminder.completed ? "line-through" : "none",
             transition: "all 0.3s ease",
           }}
+          title={reminder.title}
         >
           {reminder.title}
         </div>
