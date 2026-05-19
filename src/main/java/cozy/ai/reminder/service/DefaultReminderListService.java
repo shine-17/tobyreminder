@@ -72,8 +72,17 @@ public class DefaultReminderListService implements ReminderListService {
     @Override
     @Transactional
     public void reorder(List<Long> ids) {
+        if (ids.isEmpty()) return;
+
+        List<ReminderList> lists = reminderListRepository.findAllById(ids);
+        Map<Long, ReminderList> listMap = lists.stream()
+                .collect(java.util.stream.Collectors.toMap(ReminderList::getId, l -> l));
+
         for (int i = 0; i < ids.size(); i++) {
-            ReminderList list = findById(ids.get(i));
+            ReminderList list = listMap.get(ids.get(i));
+            if (list == null) {
+                throw new NoSuchElementException("ReminderList not found: " + ids.get(i));
+            }
             list.updateDisplayOrder(i);
         }
     }

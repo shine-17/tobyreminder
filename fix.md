@@ -80,7 +80,7 @@
   - `@OneToMany(mappedBy = "list", cascade = CascadeType.ALL, orphanRemoval = true)` 추가
   - `DefaultReminderListService.delete()`에서 수동 삭제 로직 제거
 
-- [ ] **B-M4. Reorder 쿼리 최적화**
+- [x] **B-M4. Reorder 쿼리 최적화**
   - 파일: `service/DefaultReminderListService.java:73-78`, `service/DefaultReminderService.java`
   - N건 개별 UPDATE → 배치 UPDATE 또는 `@Modifying @Query` 사용
 

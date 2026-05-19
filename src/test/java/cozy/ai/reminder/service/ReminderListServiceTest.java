@@ -235,6 +235,24 @@ class ReminderListServiceTest {
             assertThat(reminderListRepository.findById(a.getId()).orElseThrow().getDisplayOrder()).isEqualTo(1);
             assertThat(reminderListRepository.findById(b.getId()).orElseThrow().getDisplayOrder()).isEqualTo(2);
         }
+
+        @Test
+        @DisplayName("빈 리스트로 reorder해도 예외가 발생하지 않는다")
+        void reorderWithEmptyListDoesNotThrow() {
+            reminderListService.reorder(List.of());
+
+            // 기존 리스트에 영향 없음
+            assertThat(reminderListRepository.findAll()).isEmpty();
+        }
+
+        @Test
+        @DisplayName("존재하지 않는 ID로 reorder하면 예외가 발생한다")
+        void reorderWithInvalidIdThrows() {
+            ReminderList a = saveList("A", "#007AFF", 0);
+
+            assertThatThrownBy(() -> reminderListService.reorder(List.of(a.getId(), 99L)))
+                    .isInstanceOf(NoSuchElementException.class);
+        }
     }
 
     private ReminderList saveList(String name, String color, int displayOrder) {
