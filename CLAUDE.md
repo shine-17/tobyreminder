@@ -6,7 +6,8 @@
 - `service/` — Service 구현 클래스 (Default 접두사, 예: `DefaultReminderListService`)
 - `repository/` — Spring Data JPA Repository
 - `controller/` — REST Controller
-- `dto/` — Request/Response DTO
+- `dto/request/` — Request DTO
+- `dto/response/` — Response DTO
 
 ## 네이밍
 - Service 인터페이스: `XxxService` (ports/in 패키지)

@@ -1,7 +1,7 @@
 package cozy.ai.reminder.controller;
 
-import cozy.ai.reminder.dto.ReminderRequest;
-import cozy.ai.reminder.dto.ReminderResponse;
+import cozy.ai.reminder.dto.request.ReminderRequest;
+import cozy.ai.reminder.dto.response.ReminderResponse;
 import cozy.ai.reminder.service.ports.in.ReminderService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;

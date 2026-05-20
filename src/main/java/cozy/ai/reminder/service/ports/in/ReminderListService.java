@@ -1,7 +1,7 @@
 package cozy.ai.reminder.service.ports.in;
 
-import cozy.ai.reminder.dto.ReminderListRequest;
-import cozy.ai.reminder.dto.ReminderListResponse;
+import cozy.ai.reminder.dto.request.ReminderListRequest;
+import cozy.ai.reminder.dto.response.ReminderListResponse;
 
 import java.util.List;
 

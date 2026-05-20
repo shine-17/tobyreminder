@@ -3,7 +3,7 @@
 import { useState, useRef, useEffect, useCallback } from "react";
 import { Trash2 } from "lucide-react";
 import { Reminder } from "@/types";
-import { updateReminder, deleteReminder } from "@/lib/api";
+import { updateReminder, deleteReminder, createReminder } from "@/lib/api";
 import Checkbox from "./Checkbox";
 import { showToast } from "./Toast";
 
@@ -84,10 +84,26 @@ export default function ReminderDetail({
   const handleDelete = async () => {
     if (deleting) return;
     setDeleting(true);
+    const { title: origTitle, memo: origMemo, listId } = reminder;
     try {
       await deleteReminder(reminder.id);
       onSaved();
       onClose();
+      showToast("Reminder deleted", "info", {
+        label: "Undo",
+        onClick: async () => {
+          try {
+            await createReminder({
+              title: origTitle,
+              memo: origMemo,
+              listId,
+            });
+            onSaved();
+          } catch {
+            showToast("Failed to undo delete");
+          }
+        },
+      });
     } catch (err) {
       showToast("Failed to delete reminder");
       setDeleting(false);

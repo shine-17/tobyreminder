@@ -6,14 +6,19 @@ export interface ToastMessage {
   id: number;
   text: string;
   type: "error" | "success" | "info";
+  action?: { label: string; onClick: () => void };
 }
 
 let toastId = 0;
 let addToastCallback: ((msg: Omit<ToastMessage, "id">) => void) | null = null;
 
 /** Global function to show a toast from anywhere */
-export function showToast(text: string, type: ToastMessage["type"] = "error") {
-  addToastCallback?.({ text, type });
+export function showToast(
+  text: string,
+  type: ToastMessage["type"] = "error",
+  action?: { label: string; onClick: () => void }
+) {
+  addToastCallback?.({ text, type, action });
 }
 
 export default function ToastContainer() {
@@ -32,8 +37,10 @@ export default function ToastContainer() {
   const addToast = useCallback(
     (msg: Omit<ToastMessage, "id">) => {
       const id = ++toastId;
+      // Undo toasts stay longer (8s), others 4s
+      const duration = msg.action ? 8000 : 4000;
       setToasts((prev) => [...prev.slice(-4), { ...msg, id }]);
-      const timer = setTimeout(() => removeToast(id), 4000);
+      const timer = setTimeout(() => removeToast(id), duration);
       timersRef.current.set(id, timer);
     },
     [removeToast]
@@ -65,6 +72,17 @@ export default function ToastContainer() {
           role="alert"
         >
           <span className="flex-1">{toast.text}</span>
+          {toast.action && (
+            <button
+              onClick={() => {
+                toast.action!.onClick();
+                removeToast(toast.id);
+              }}
+              className="ml-1 font-semibold underline underline-offset-2 hover:opacity-80"
+            >
+              {toast.action.label}
+            </button>
+          )}
           <button
             onClick={() => removeToast(toast.id)}
             className="ml-2 opacity-70 hover:opacity-100"

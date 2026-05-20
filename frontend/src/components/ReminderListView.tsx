@@ -22,17 +22,40 @@ export default function ReminderListView({
   const [editingId, setEditingId] = useState<number | null>(null);
   const [focusedIndex, setFocusedIndex] = useState<number>(-1);
 
+  const pendingFocusIndexRef = useRef<number | null>(null);
+
   const handleToggleComplete = useCallback(
     async (id: number) => {
+      // Determine which index to focus after the toggled item is removed
+      const idx = reminders.findIndex((r) => r.id === id);
+      if (idx >= 0 && !reminders[idx].completed) {
+        // Completing: focus next item (or previous if last)
+        const nextIdx = idx < reminders.length - 1 ? idx : Math.max(idx - 1, 0);
+        pendingFocusIndexRef.current = nextIdx;
+      }
       try {
         await toggleComplete(id);
         onRefresh();
       } catch (err) {
         showToast("Failed to toggle reminder");
+        pendingFocusIndexRef.current = null;
       }
     },
-    [onRefresh]
+    [onRefresh, reminders]
   );
+
+  // Apply pending focus after reminders update
+  useEffect(() => {
+    if (pendingFocusIndexRef.current !== null && reminders.length > 0) {
+      const targetIdx = Math.min(pendingFocusIndexRef.current, reminders.length - 1);
+      setFocusedIndex(targetIdx);
+      pendingFocusIndexRef.current = null;
+      // Focus the DOM element
+      const listEl = document.querySelector(`[role="list"]`);
+      const items = listEl?.querySelectorAll<HTMLElement>('[role="listitem"]');
+      items?.[targetIdx]?.focus();
+    }
+  }, [reminders]);
 
   // Keyboard navigation
   useEffect(() => {
@@ -59,10 +82,14 @@ export default function ReminderListView({
     return () => document.removeEventListener("keydown", handleKeyDown);
   }, [editingId, focusedIndex, reminders]);
 
-  // Reset focused index when reminders change
+  // Reset focused index when the list itself changes (not just reminders content)
+  const prevListIdRef = useRef(list.id);
   useEffect(() => {
-    setFocusedIndex(-1);
-  }, [reminders]);
+    if (prevListIdRef.current !== list.id) {
+      setFocusedIndex(-1);
+      prevListIdRef.current = list.id;
+    }
+  }, [list.id]);
 
   return (
     <div className="max-w-[640px] mx-auto px-4 py-6">

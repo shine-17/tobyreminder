@@ -12,6 +12,7 @@ import {
 import Sidebar from "@/components/Sidebar";
 import ReminderListView from "@/components/ReminderListView";
 import ListModal from "@/components/ListModal";
+import ConfirmDialog from "@/components/ConfirmDialog";
 import ToastContainer, { showToast } from "@/components/Toast";
 
 export default function Home() {
@@ -23,6 +24,7 @@ export default function Home() {
   // Modal state
   const [showListModal, setShowListModal] = useState(false);
   const [editingList, setEditingList] = useState<ReminderList | null>(null);
+  const [confirmingDelete, setConfirmingDelete] = useState<ReminderList | null>(null);
 
   // Fetch lists
   const fetchLists = useCallback(async (signal?: AbortSignal) => {
@@ -97,9 +99,13 @@ export default function Home() {
     setShowListModal(true);
   }, []);
 
-  const handleDeleteList = useCallback(
+  const handleDeleteList = useCallback((list: ReminderList) => {
+    setConfirmingDelete(list);
+  }, []);
+
+  const executeDeleteList = useCallback(
     async (list: ReminderList) => {
-      if (!confirm(`Delete "${list.name}" and all its reminders?`)) return;
+      setConfirmingDelete(null);
       try {
         await deleteList(list.id);
         const updated = await fetchLists();
@@ -177,6 +183,16 @@ export default function Home() {
           editingList={editingList}
           onSave={handleSaveList}
           onCancel={() => setShowListModal(false)}
+        />
+      )}
+
+      {/* Confirm Delete Dialog */}
+      {confirmingDelete && (
+        <ConfirmDialog
+          message={`Delete "${confirmingDelete.name}" and all its reminders?`}
+          confirmLabel="Delete"
+          onConfirm={() => executeDeleteList(confirmingDelete)}
+          onCancel={() => setConfirmingDelete(null)}
         />
       )}
     </div>

@@ -1,4 +1,4 @@
-package cozy.ai.reminder.dto;
+package cozy.ai.reminder.dto.response;
 
 import cozy.ai.reminder.domain.Reminder;
 

@@ -1,9 +1,9 @@
 package cozy.ai.reminder.service;
 
 import cozy.ai.reminder.domain.ReminderList;
-import cozy.ai.reminder.dto.ReminderListRequest;
-import cozy.ai.reminder.dto.ReminderListResponse;
-import cozy.ai.reminder.dto.ReminderRequest;
+import cozy.ai.reminder.dto.request.ReminderListRequest;
+import cozy.ai.reminder.dto.request.ReminderRequest;
+import cozy.ai.reminder.dto.response.ReminderListResponse;
 import cozy.ai.reminder.service.ports.in.ReminderListService;
 import cozy.ai.reminder.service.ports.in.ReminderService;
 import cozy.ai.reminder.repository.ReminderListRepository;
