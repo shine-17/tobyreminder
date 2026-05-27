@@ -42,8 +42,7 @@
   - 수정: `React.memo` + 적절한 비교 함수 적용
 
 - [x] **F-H4. AbortController 추가** — API fetch
-  - 파일: `lib/api.ts`, 각 컴포넌트의 useEffect
-  - 컴포넌트 언마운트 시 진행 중인 fetch 취소
+  - 파일: `lib/api.ts`, 각 컴포넌트의 useEffecta
   - 수정: `fetchJson`에 signal 파라미터 추가, useEffect cleanup에서 abort
 
 - [x] **F-H5. Error Boundary 추가**
